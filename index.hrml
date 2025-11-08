@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inversión Inteligente: Gana Más que en el Banco 🤝</title>
+    
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Estilos base y fuente */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa; /* Fondo muy claro */
+        }
+        .shadow-glass {
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+        }
+        /* Degradado Predominante Lila/Azul para el texto acentuado */
+        .text-gradient-main {
+            background-image: linear-gradient(to right, #6b46c1, #5a67d8); /* Púrpura/Índigo */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: transparent; /* Fallback */
+        }
+        
+        /* --- Efecto Liquid Glass --- */
+        .glass-card {
+            background-color: rgba(255, 255, 255, 0.75); /* 75% Transparencia */
+            backdrop-filter: blur(10px); /* Efecto Frosted Glass */
+            -webkit-backdrop-filter: blur(10px); 
+            border: 1px solid rgba(255, 255, 255, 0.4); 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: rgba(107, 70, 193, 0.5); /* Púrpura en hover */
+        }
+
+        /* --- ESTILOS AVANZADOS DE CABECERA (Lila y Azul) --- */
+        .liquid-header {
+            /* Main Gradient: Degradado Lila/Púrpura a Azul */
+            background-image: linear-gradient(135deg, #6b46c1 0%, #5a67d8 50%, #4299E1 100%);
+            position: relative;
+            overflow: hidden;
+            /* Sombra interna para darle profundidad (efecto de capa de cristal) */
+            box-shadow: inset 0 0 50px rgba(255, 255, 255, 0.3), 0 10px 40px rgba(66, 153, 225, 0.5); /* Sombra ajustada al azul */
+        }
+
+        /* Pseudo-elemento para el patrón sutil/animado (Liquid Effect) */
+        .liquid-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            /* Radial Glow sutil y transparente */
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
+            opacity: 0.7;
+            animation: rotate 20s linear infinite; /* Animación de rotación muy lenta */
+            pointer-events: none; /* Asegura que el texto sea seleccionable */
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .header-content {
+            position: relative; /* Asegura que el contenido esté sobre el pseudo-elemento */
+            z-index: 10;
+        }
+        /* --- FIN ESTILOS AVANZADOS DE CABECERA --- */
+
+        /* Iconos SVG */
+        .svg-icon-lg {
+            width: 1.5rem; 
+            height: 1.5rem;
+            stroke-width: 2.5;
+        }
+        /* Gráfica de Barras */
+        .bar {
+            transition: width 1s ease-out;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+
+    <div class="max-w-4xl mx-auto rounded-3xl shadow-glass overflow-hidden border border-gray-100 glass-card">
+        
+        <!-- INICIO: Cabecera de la Propuesta (Mejor Contraste y Espaciado) -->
+        <header class="liquid-header p-8 sm:p-12 text-white text-center rounded-t-3xl">
+            <div class="header-content">
+                <!-- Subtítulo profesional y elegante -->
+                <p class="text-purple-200 text-xl font-semibold mb-3 tracking-widest uppercase">
+                    // Acuerdo Financiero Privado
+                </p>
+                <!-- Título principal con acento en el retorno (Ahora más legible) -->
+                <h1 class="text-5xl sm:text-6xl font-black mb-2 leading-snug">
+                    Inversión con <span class="text-cyan-300 italic">Retorno Superior</span>
+                </h1>
+                <!-- Información clave del acuerdo (Margen superior reducido) -->
+                <p class="text-purple-100 text-2xl font-light mt-3">
+                    Bs 5.000 | Tasa Fija Anual del 10%
+                </p>
+            </div>
+        </header>
+        <!-- FIN: Cabecera de la Propuesta -->
+
+        
+        <main class="p-6 sm:p-10 space-y-12">
+
+            <!-- Sección: Visualización de Ganancia (Gráfico) -->
+            <section class="space-y-6 animate-fade-in" style="animation-delay: 0.1s;">
+                <h2 class="text-3xl font-bold text-gray-800 border-b pb-4">¿Por qué Ganas Más? (Visualización)</h2>
+                
+                <div class="glass-card p-6 rounded-2xl border border-gray-200">
+                    <p class="text-lg font-semibold mb-6 text-gray-700">Comparativa de Ganancia Anual (Intereses sobre Bs 5.000)</p>
+
+                    <!-- Barra 1: Banco (6% Máximo) -->
+                    <div class="mb-5">
+                        <div class="flex justify-between items-end mb-1">
+                            <p class="text-sm font-medium text-gray-600">DPF Bancario (Máx. 6% Anual)</p>
+                            <p class="text-sm font-bold text-red-600">Bs 300</p>
+                        </div>
+                        <div class="w-full bg-red-100 rounded-full h-8 overflow-hidden">
+                            <div class="bar h-8 bg-red-500 flex items-center justify-end pr-3 font-bold text-white text-sm" style="width: 60%; transition-delay: 0.5s;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Barra 2: Préstamo Privado (10%) -->
+                    <div>
+                        <div class="flex justify-between items-end mb-1">
+                            <p class="text-sm font-medium text-gray-600">Inversión Privada Acordada (10% Fijo)</p>
+                            <p class="text-sm font-bold text-green-600">Bs 500</p>
+                        </div>
+                        <div class="w-full bg-green-100 rounded-full h-8 overflow-hidden">
+                            <div class="bar h-8 bg-green-600 flex items-center justify-end pr-3 font-bold text-white text-sm" style="width: 100%; transition-delay: 0.7s;">
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mt-6 text-center font-bold text-xl text-purple-700">¡Ganas Bs 200 más de interés!</p>
+                </div>
+            </section>
+
+
+            <!-- Sección: Resumen del Trato -->
+            <section class="space-y-6 animate-fade-in" style="animation-delay: 0.3s;">
+                <h2 class="text-3xl font-bold text-gray-800 border-b pb-4">Detalles y Montos Fijos</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                    <div class="p-5 glass-card rounded-xl hover-lift">
+                        <p class="text-sm text-indigo-700">Capital Prestado</p>
+                        <p class="text-2xl font-bold text-gradient-main mt-1">Bs 5.000</p>
+                    </div>
+                    <div class="p-5 glass-card rounded-xl hover-lift">
+                        <p class="text-sm text-green-700">Interés Generado</p>
+                        <p class="text-2xl font-bold text-green-600 mt-1">Bs 500</p>
+                    </div>
+                    <div class="p-5 glass-card rounded-xl hover-lift">
+                        <p class="text-sm text-purple-700">Total a Recibir</p>
+                        <p class="text-2xl font-bold text-gradient-main mt-1">Bs 5.500</p>
+                    </div>
+                    <div class="p-5 glass-card rounded-xl hover-lift">
+                        <p class="text-sm text-gray-700">Cuota Mensual Fija</p>
+                        <p class="text-2xl font-bold text-gray-800 mt-1">Bs 458</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección: Cronograma de Pagos -->
+            <section class="space-y-6 animate-fade-in" style="animation-delay: 0.5s;">
+                <h2 class="text-3xl font-bold text-gray-800 border-b pb-4">Cronograma Exacto de Pagos</h2>
+                <p class="text-gray-700 leading-relaxed italic text-base">
+                    Recibirás <b>11 cuotas fijas de Bs 458</b> y una última cuota ajustada para saldar el total de Bs 5.500. El pago se realizará el día <b>8 de cada mes.</b>
+                </p>
+                <div class="overflow-x-auto rounded-xl border border-gray-200 shadow-md glass-card">
+                    <table class="min-w-full divide-y divide-gray-200" id="payment-schedule-table">
+                        <thead class="bg-purple-100">
+                            <tr>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-gray-800 uppercase tracking-wider">No.</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-gray-800 uppercase tracking-wider">Fecha de Pago</th>
+                                <th scope="col" class="px-4 py-3 text-right text-xs font-semibold text-gray-800 uppercase tracking-wider">Cuota Fija</th>
+                                <th scope="col" class="px-4 py-3 text-right text-xs font-semibold text-gray-800 uppercase tracking-wider">Saldo Pendiente</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Sección de Confianza (FINAL) -->
+            <section class="space-y-6 animate-fade-in" style="animation-delay: 0.7s;">
+                <h2 class="text-3xl font-bold text-gray-800 border-b pb-4 flex items-center">
+                    <svg class="svg-icon-lg mr-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c1.657 0 3 .895 3 2s-1.343 2-3 2h-1c-1.657 0-3 .895-3 2s1.343 2 3 2m-8-2v.01M18 10h.01M12 21a9 9 0 01-9-9 9 9 0 019-9 9 9 0 019 9 9 9 0 01-9 9z"></path></svg>
+                    Razones de Confianza (Garantía Personal)
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Razón 1: Serio y Confiable -->
+                    <div class="flex items-start p-4 glass-card rounded-xl hover-lift">
+                        <svg class="svg-icon-lg mr-3 text-indigo-600 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.146-2.05-.401-3.03z"></path></svg>
+                        <p class="font-medium text-gray-800">Soy una persona <b>Seria y Confiable</b>, comprometido a honrar mi palabra.</p>
+                    </div>
+                    <!-- Razón 2: Relación Personal (Novio) -->
+                    <div class="flex items-start p-4 glass-card rounded-xl hover-lift">
+                        <svg class="svg-icon-lg mr-3 text-blue-600 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                        <p class="font-medium text-gray-800"><b>Compromiso Personal:</b> Como tu novio, esta promesa es inquebrantable.</p>
+                    </div>
+                    <!-- Razón 3: Domicilio -->
+                    <div class="flex items-start p-4 glass-card rounded-xl hover-lift">
+                        <svg class="svg-icon-lg mr-3 text-purple-600 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <p class="font-medium text-gray-800"><b>Ubicación Conocida:</b> La garantía física de mi domicilio elimina cualquier duda.</p>
+                    </div>
+                    <!-- Razón 4: Responsabilidad -->
+                    <div class="flex items-start p-4 glass-card rounded-xl hover-lift">
+                        <svg class="svg-icon-lg mr-3 text-green-600 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5s3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18s-3.332.477-4.5 1.253"></path></svg>
+                        <p class="font-medium text-gray-800">Soy una persona <b>responsable</b> en todos mis asuntos y metas financieras.</p>
+                    </div>
+                </div>
+            </section>
+
+            
+            <!-- Pie de página con botón de WhatsApp -->
+            <footer class="text-center pt-8 border-t border-gray-200 mt-10">
+                <p class="text-xl font-bold text-gray-700 mb-4">¡Lista para iniciar este acuerdo!</p>
+                <!-- Botón de WhatsApp - Lleva a 591 64188659 -->
+                <a href="https://wa.me/59164188659" target="_blank" class="inline-block mt-6 px-8 py-4 bg-green-500 text-white font-extrabold text-lg rounded-full hover:bg-green-600 transition duration-300 transform hover:scale-105 shadow-xl shadow-green-300/50 flex items-center justify-center mx-auto max-w-xs">
+                    <svg class="w-6 h-6 mr-3" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12.001 2c-5.522 0-10 4.478-10 10 0 1.777.467 3.447 1.282 4.887l-.92 3.484 3.593-.935c1.39.73 2.977 1.13 4.645 1.13 5.522 0 10-4.478 10-10 0-5.522-4.478-10-10-10zm0 18.2c-1.57 0-3.07-.43-4.38-1.25l-.31-.19-3.21.84.85-3.13-.2-1.25c-.75-1.34-1.15-2.88-1.15-4.52 0-4.52 3.68-8.2 8.2-8.2s8.2 3.68 8.2 8.2c0 4.52-3.68 8.2-8.2 8.2zm4.78-5.32c-.1-.17-.37-.28-.77-.47-.4-.2-.23-.3-.16-.47.07-.17.47-.59.54-.7.07-.1.14-.17.2-.27.06-.1.03-.17-.01-.27-.04-.1-.4-.24-1.07-.66-.67-.42-1.13-1.07-1.35-1.45-.21-.38-.01-.59.15-.75.16-.16.35-.38.48-.57.13-.19.19-.39.27-.56.07-.17.03-.3-.02-.4-.05-.1-.48-1.15-.65-1.55-.17-.4-.35-.34-.48-.34-.13 0-.29-.02-.45-.02-.17 0-.44.06-.66.3-.22.24-.84.83-.84 2.03s.86 2.35.97 2.52c.1.17 1.7 2.65 4.1 3.61 2.39.96 2.47.63 2.92.59.45-.04 1.25-.51 1.43-1.01.18-.5.18-.94.12-1.01-.06-.07-.2-.17-.4-.27z"/></svg>
+                    Conversemos por WhatsApp
+                </a>
+            </footer>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const totalDebt = 5500; // Bs 5000 capital + Bs 500 interes
+            const termMonths = 12;
+            const monthlyPaymentRounded = 458; // Bs 458 por 11 meses
+
+            const tableBody = document.querySelector('#payment-schedule-table tbody');
+
+            let remainingDebt = totalDebt;
+
+            // Fecha de inicio: Hoy (8 de noviembre de 2025)
+            const today = new Date('2025-11-08'); 
+            const paymentDay = today.getDate(); // Día 8
+
+            // Función para formatear fechas (ej: "8 de Diciembre de 2025")
+            const formatDate = (date) => {
+                return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+            };
+
+            // Función para formatear dinero (Bs 5.000)
+            const formatMoney = (amount) => {
+                // Usamos toLocaleString para manejar los separadores de miles y el formato. Redondeamos a cero decimales.
+                return parseFloat(amount).toFixed(0).toLocaleString('es-ES').replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' Bs';
+            };
+
+
+            // Fila inicial de Préstamo
+            const initialRow = tableBody.insertRow();
+            initialRow.classList.add('bg-gray-50', 'font-bold');
+            initialRow.innerHTML = `
+                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">Inicial</td>
+                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900">${formatDate(today)}</td>
+                <td class="px-4 py-3 whitespace-nowrap text-sm text-right text-gray-900">--</td>
+                <td class="px-4 py-3 whitespace-nowrap text-sm text-right text-gray-900">${formatMoney(totalDebt)}</td>
+            `;
+
+            for (let i = 1; i <= termMonths; i++) {
+                const row = tableBody.insertRow();
+                
+                // Calcular la fecha de pago
+                const paymentDate = new Date(today);
+                paymentDate.setMonth(today.getMonth() + i);
+                
+                // Asegurar que el día sea el mismo (8)
+                if (paymentDate.getDate() !== paymentDay) {
+                    paymentDate.setDate(0); 
+                    paymentDate.setDate(paymentDay);
+                }
+
+                let currentPayment;
+                if (i <= termMonths - 1) {
+                    // Primeros 11 pagos redondeados
+                    currentPayment = monthlyPaymentRounded;
+                } else {
+                    // La última cuota ajusta el saldo restante. Usamos Math.ceil para asegurar que cubra el saldo.
+                    currentPayment = Math.ceil(remainingDebt); 
+                }
+
+                remainingDebt -= currentPayment;
+
+                // Asegurarse de que el saldo no sea negativo al final
+                const displayedRemainingDebt = Math.max(0, remainingDebt);
+
+                row.innerHTML = `
+                    <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">${i}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">${formatDate(paymentDate)}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-right font-semibold text-gray-800">${formatMoney(currentPayment)}</td>
+                    <td class="px-4 py-3 whitespace-nowrap text-sm text-right text-gray-600">${formatMoney(displayedRemainingDebt)}</td>
+                `;
+            }
+
+            // Aplicar animación a las secciones
+            document.querySelectorAll('.animate-fade-in').forEach((el, index) => {
+                el.style.animationDelay = `${index * 0.2}s`;
+            });
+        });
+    </script>
+</body>
+</html>
