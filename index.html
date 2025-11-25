@@ -1,100 +1,31 @@
-import React, { useRef, useState } from 'react';
-import { 
-  Smartphone, Monitor, Lock, User, 
-  CheckCircle, AlertTriangle, 
-  Printer, Shield, Key, Wifi, Download
-} from 'lucide-react';
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Activación de Banca por Internet</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Carga de la fuente Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Carga de librerías para generación directa de PDF (html2canvas y jspdf) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-// Renombramos el componente principal a App para seguir la convención.
-const App = () => {
-  const printRef = useRef(null);
-  const [isGenerating, setIsGenerating] = useState(false);
-
-  /**
-   * Cargar librerías para generación directa de PDF (Alternativa a window.print)
-   * NOTA: Es crucial que estas librerías estén disponibles globalmente (window.html2canvas, window.jspdf)
-   * Se cargan usando etiquetas <script> dentro del JSX.
-   */
-  const loadScripts = (
-    <>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    </>
-  );
-
-  /**
-   * Maneja la descarga directa de PDF utilizando html2canvas y jspdf.
-   * Garantiza que todo el contenido se capture y se genere en múltiples páginas
-   * si es necesario, en tamaño Carta.
-   */
-  const handleDownloadPDF = async () => {
-    if (typeof window.html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
-      alert("Error: Las librerías de generación de PDF no se han cargado correctamente.");
-      return;
-    }
-
-    setIsGenerating(true);
-    const input = printRef.current;
-
-    try {
-      // 1. Capturar todo el contenido como un canvas (imagen grande)
-      const canvas = await window.html2canvas(input, {
-          scale: 2, // Mejor resolución
-          useCORS: true,
-          allowTaint: true,
-          scrollX: 0,
-          scrollY: 0,
-          windowWidth: input.scrollWidth,
-          windowHeight: input.scrollHeight
-      });
-
-      const imgData = canvas.toDataURL('image/jpeg', 1.0);
-      
-      // 2. Inicializar PDF (Tamaño Carta - 'letter')
-      const pdf = new window.jspdf.jsPDF('p', 'mm', 'letter'); 
-      
-      const imgWidth = 215.9; // Ancho Carta en mm (8.5 inches)
-      const pageHeight = 279.4; // Altura Carta en mm (11 inches)
-      
-      // Calcular la altura total de la imagen en mm
-      const imgHeight = canvas.height * imgWidth / canvas.width;
-      let heightLeft = imgHeight;
-      let position = 0;
-
-      // 3. Añadir imagen al PDF, manejando múltiples páginas
-      pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-
-      // Recorre el resto de la imagen y añade páginas nuevas
-      while (heightLeft >= -1) { 
-          position = heightLeft - imgHeight;
-          pdf.addPage();
-          pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
-          heightLeft -= pageHeight;
-      }
-      
-      // 4. Guardar el archivo
-      pdf.save('Guia_Activacion_Banca_Internet.pdf');
-    } catch (error) {
-      console.error("Error al generar el PDF:", error);
-      // Usar un método alternativo de alerta que no sea window.alert
-      // En este caso, simplemente logueamos el error.
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
-  return (
-    <div className="min-h-screen bg-[#F0F4F8] font-sans text-slate-800 selection:bg-indigo-100 pb-20 print:bg-white print:pb-0">
-      
-      {/* 1. CARGA DE LIBRERÍAS DE PDF */}
-      {loadScripts}
-
-      {/* Estilos para impresión y fuentes personalizadas. Incluidos en el archivo único. */}
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+    <style>
+        /* Estilos generales y fuente */
         body { font-family: 'Inter', sans-serif; }
-        
+
+        /* Animaciones para el header */
+        @keyframes blob {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          33% { transform: translate(30px, -50px) scale(1.1); }
+          66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+        .animate-blob { animation: blob 7s infinite; }
+        .animation-delay-2000 { animation-delay: 2s; }
+
         /* Media query para impresión */
         @media print {
           /* Ajustes de tamaño Carta */
@@ -123,316 +54,426 @@ const App = () => {
           /* Elimina sombras para impresión limpia */
           .shadow-xl, .shadow-lg, .shadow-md, .shadow-sm { box-shadow: none !important; border: 1px solid #eee; }
         }
+    </style>
+</head>
+<body class="min-h-screen bg-[#F0F4F8] font-sans text-slate-800 selection:bg-indigo-100 pb-20 print:bg-white print:pb-0">
 
-        /* Animaciones para el header (ya existían) */
-        @keyframes blob {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          33% { transform: translate(30px, -50px) scale(1.1); }
-          66% { transform: translate(-20px, 20px) scale(0.9); }
+    <script>
+        // Función JavaScript para manejar la generación de PDF
+        let isGenerating = false;
+        
+        async function handleDownloadPDF() {
+            if (isGenerating) return;
+
+            const button = document.getElementById('pdf-download-button');
+            // SVG para el indicador de carga
+            const loadingSvg = '<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Generando PDF...';
+            // Contenido original del botón (Incluye el ícono de descarga estático)
+            const originalHtml = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 group-hover:scale-110 transition-transform"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Descargar Guía Completa en PDF';
+
+            if (typeof window.html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
+                console.error("Librerías de PDF no cargadas.");
+                return;
+            }
+
+            isGenerating = true;
+            button.innerHTML = loadingSvg;
+            button.disabled = true; // Deshabilitar durante la carga
+
+            const input = document.getElementById('print-content');
+
+            try {
+                // 1. Capturar todo el contenido como un canvas (imagen grande)
+                const canvas = await html2canvas(input, {
+                    scale: 2, 
+                    useCORS: true,
+                    allowTaint: true,
+                    scrollX: 0,
+                    scrollY: 0,
+                    windowWidth: input.scrollWidth,
+                    windowHeight: input.scrollHeight
+                });
+
+                const imgData = canvas.toDataURL('image/jpeg', 1.0);
+                
+                // 2. Inicializar PDF (Tamaño Carta - 'letter')
+                const pdf = new window.jspdf.jsPDF('p', 'mm', 'letter'); 
+                
+                const imgWidth = 215.9; // Ancho Carta en mm (8.5 inches)
+                const pageHeight = 279.4; // Altura Carta en mm (11 inches)
+                
+                // Calcular la altura total de la imagen en mm
+                const imgHeight = canvas.height * imgWidth / canvas.width;
+                let heightLeft = imgHeight;
+                let position = 0;
+
+                // 3. Añadir imagen al PDF, manejando múltiples páginas
+                pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+
+                // Recorre el resto de la imagen y añade páginas nuevas
+                while (heightLeft >= 0) { // Criterio de parada ajustado para evitar bucles infinitos
+                    position = heightLeft - imgHeight;
+                    pdf.addPage();
+                    pdf.addImage(imgData, 'JPEG', 0, position, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                }
+                
+                // 4. Guardar el archivo
+                pdf.save('Guia_Activacion_Banca_Internet.pdf');
+            } catch (error) {
+                console.error("Error al generar el PDF:", error);
+            } finally {
+                isGenerating = false;
+                // Restaurar el botón
+                button.innerHTML = originalHtml;
+                button.disabled = false;
+            }
         }
-        .animate-blob { animation: blob 7s infinite; }
-        .animation-delay-2000 { animation-delay: 2s; }
-      `}</style>
+    </script>
 
-      {/* El contenido completo que queremos capturar en el PDF se envuelve en este div con ref */}
-      <div id="print-content" ref={printRef}>
+    <!-- El contenido completo que queremos capturar en el PDF se envuelve en este div -->
+    <div id="print-content">
 
-        {/* --- HERO HEADER (COLOR CLARO) --- */}
-        <header className="bg-blue-50 text-slate-900 pt-20 pb-24 relative overflow-hidden shadow-lg print:pt-10 print:pb-10 print:shadow-none print:bg-white">
-          {/* Decoración de fondo */}
-          <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob"></div>
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-cyan-400 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000"></div>
-          
-          <div className="max-w-4xl mx-auto px-6 relative z-10 text-center">
-            {/* Badge ajustado para fondo azul claro */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-cyan-300 bg-cyan-100 backdrop-blur-sm text-cyan-800 text-xs font-bold tracking-widest uppercase mb-6">
-              <Wifi size={12} /> Guía Oficial • Banco Unión
+        <!-- --- HERO HEADER (COLOR CLARO) --- -->
+        <header class="bg-blue-50 text-slate-900 pt-20 pb-24 relative overflow-hidden shadow-lg print:pt-10 print:pb-10 print:shadow-none print:bg-white">
+            <!-- Decoración de fondo -->
+            <div class="absolute top-0 right-0 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob"></div>
+            <div class="absolute bottom-0 left-0 w-96 h-96 bg-cyan-400 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000"></div>
+            
+            <div class="max-w-4xl mx-auto px-6 relative z-10 text-center">
+                <!-- Badge (Icono Wifi) -->
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-cyan-300 bg-cyan-100 backdrop-blur-sm text-cyan-800 text-xs font-bold tracking-widest uppercase mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class=""><path d="M12 20h.01"/><path d="M2 8.82a15 15 0 0 1 20 0"/><path d="M5 12.859a9 9 0 0 1 14 0"/><path d="M8.5 16.9a3 3 0 0 1 7 0"/></svg>
+                    Guía Oficial • Banco Unión
+                </div>
+                <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 leading-tight text-slate-900">
+                    Activar Banca <br class="md:hidden"/> por Internet
+                </h1>
+                <div class="w-24 h-1 bg-gradient-to-r from-cyan-600 to-blue-700 mx-auto rounded-full mb-6"></div>
+                <!-- Párrafo ajustado para fondo azul claro -->
+                <p class="text-slate-700 text-lg font-light max-w-xl mx-auto">
+                    Sigue los pasos en orden para configurar tu acceso seguro UNIMÓVIL Plus.
+                </p>
             </div>
-            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mb-4 leading-tight text-slate-900">
-              Activar Banca <br className="md:hidden"/> por Internet
-            </h1>
-            <div className="w-24 h-1 bg-gradient-to-r from-cyan-600 to-blue-700 mx-auto rounded-full mb-6"></div>
-            {/* Párrafo ajustado para fondo azul claro */}
-            <p className="text-slate-700 text-lg font-light max-w-xl mx-auto">
-              Sigue los pasos en orden para configurar tu acceso seguro UNIMÓVIL Plus.
-            </p>
-          </div>
         </header>
 
-        <main className="max-w-4xl mx-auto px-6 -mt-16 relative z-20">
-          
-          {/* --- PREREQUISITES CARD --- */}
-          <div className="bg-white/90 backdrop-blur-xl rounded-2xl shadow-xl p-8 mb-12 border-t-4 border-cyan-400 print:shadow-none print:border">
-            <div className="flex flex-col md:flex-row gap-6 items-start">
-              <div className="bg-cyan-50 p-4 rounded-xl text-cyan-700 shrink-0">
-                <AlertTriangle size={32} strokeWidth={1.5} />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-lg font-bold text-slate-900 mb-4 tracking-tight uppercase">🛑 Antes de empezar</h3>
-                <p className="text-slate-600 mb-6">Asegúrate de tener a mano la siguiente información crítica:</p>
-                
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="group p-5 bg-slate-50 hover:bg-white rounded-xl border border-slate-200 hover:border-cyan-300 transition-all duration-300">
-                    <div className="flex items-center gap-3 mb-2">
-                      <User size={18} className="text-cyan-600" />
-                      <span className="font-bold text-slate-900 text-sm">Usuario (Numérico)</span>
-                    </div>
-                    <div className="text-sm text-slate-500 pl-8">
-                      Revisa tu <span className="font-semibold text-cyan-700 bg-cyan-50 px-1 rounded">Correo Electrónico</span>
-                    </div>
-                  </div>
-
-                  <div className="group p-5 bg-slate-50 hover:bg-white rounded-xl border border-slate-200 hover:border-cyan-300 transition-all duration-300">
-                    <div className="flex items-center gap-3 mb-2">
-                      <Key size={18} className="text-cyan-600" />
-                      <span className="font-bold text-slate-900 text-sm">Contraseña (4 números)</span>
-                    </div>
-                    <div className="text-sm text-slate-500 pl-8">
-                      Revisa tus <span className="font-semibold text-cyan-700 bg-cyan-50 px-1 rounded">SMS</span> del celular
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* --- PART 1 --- */}
-          <SectionHeader 
-            icon={<Monitor size={24} />} 
-            title="PARTE 1: En el Navegador" 
-            subtitle="Configuración inicial de seguridad"
-          />
-
-          <div className="space-y-6 mb-16">
+        <main class="max-w-4xl mx-auto px-6 -mt-16 relative z-20" id="main-container">
             
-            {/* Paso 1 */}
-            <StepCard number="01" title="Entrar a la web">
-              <ul className="space-y-3">
-                <ListItem text="Escribe en el buscador el portal oficial de banca por internet." />
-                <ListItem text="Entra a la primera opción." />
-              </ul>
-            </StepCard>
-
-            {/* Paso 2 */}
-            <StepCard number="02" title="Poner tus datos">
-              <ul className="space-y-3">
-                <ListItem text={<>En <strong>Usuario</strong>, escribe el número de tu correo.</>} />
-                <ListItem text={<>Copia las letras y números de la imagen (código captcha). Clic en <strong>Iniciar Sesión</strong>.</>} />
-                <ListItem text={<>Escribe la <strong>clave de 4 números</strong> de tu SMS. Clic en <strong>Iniciar Sesión</strong>.</>} />
-              </ul>
-            </StepCard>
-
-            {/* Paso 3 */}
-            <StepCard number="03" title="Crear nueva Clave">
-              <div className="space-y-4">
-                
-                {/* ACCIÓN 1: Ingresar clave SMS */}
-                <ul className="space-y-3">
-                  <ListItem text={<>Escribe la <strong>clave de 4 números</strong> de tu SMS.</>} />
-                </ul>
-
-                {/* ÉNFASIS ESPECIAL SOLICITADO - CONTRASEÑA NUEVA */}
-                <div className="bg-red-50 text-red-900 p-5 rounded-xl ml-2 shadow-md my-5 relative overflow-hidden border-2 border-red-100 print:bg-white print:text-black print:border-slate-300">
-                  {/* Background Icon */}
-                  <div className="absolute top-0 right-0 p-4 opacity-10 text-red-600">
-                    <Lock size={64} /> 
-                  </div>
-                  {/* Content */}
-                  <div className="relative z-10 flex gap-4 items-center">
-                    {/* Foreground Icon */}
-                    <div className="bg-white p-2 rounded-lg shadow-sm border border-red-100 text-red-500">
-                      <Lock size={24} />
+            <!-- --- PREREQUISITES CARD --- -->
+            <div class="bg-white/90 backdrop-blur-xl rounded-2xl shadow-xl p-8 mb-12 border-t-4 border-cyan-400 print:shadow-none print:border">
+                <div class="flex flex-col md:flex-row gap-6 items-start">
+                    <div class="bg-cyan-50 p-4 rounded-xl text-cyan-700 shrink-0">
+                        <!-- Icono AlertTriangle 32 -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class=""><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                     </div>
-                    <p className="text-sm font-medium leading-relaxed">
-                      <span className="text-red-600 font-bold text-base">Requisito de Seguridad:</span> <br className='sm:hidden'/>
-                      Escribe tu <strong>nueva clave</strong> dos veces. <br/>
-                      <span className="text-red-700/80 text-xs">(Mínimo 10 caracteres, mayúsculas, minúsculas, números, signos. Ej: Maria.2024)</span>
-                    </p>
-                  </div>
-                </div>
+                    <div class="flex-1">
+                        <h3 class="text-lg font-bold text-slate-900 mb-4 tracking-tight uppercase">🛑 Antes de empezar</h3>
+                        <p class="text-slate-600 mb-6">Asegúrate de tener a mano la siguiente información crítica:</p>
+                        
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="group p-5 bg-slate-50 hover:bg-white rounded-xl border border-slate-200 hover:border-cyan-300 transition-all duration-300">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <!-- Icono User 18 -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-cyan-600"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                    <span class="font-bold text-slate-900 text-sm">Usuario (Numérico)</span>
+                                </div>
+                                <div class="text-sm text-slate-500 pl-8">
+                                    Revisa tu <span class="font-semibold text-cyan-700 bg-cyan-50 px-1 rounded">Correo Electrónico</span>
+                                </div>
+                            </div>
 
-
-                {/* ACCIÓN 2: Código de 6 números */}
-                <ul className="space-y-3">
-                  <ListItem text={<>Escribe el <strong>código de 6 números</strong> que llegó por SMS. Clic en <strong>Continuar</strong>.</>} />
-                </ul>
-                
-                <div className="flex items-center gap-3 bg-rose-50 px-4 py-3 rounded-lg border border-rose-100 text-rose-800 text-sm font-medium">
-                  <AlertTriangle size={16} />
-                  Aparecerán las opciones "Registrar" y "Salir", elige "Salir" dos veces.
-                </div>
-              </div>
-            </StepCard>
-
-            {/* Paso 4 */}
-            <StepCard number="04" title="Personalización de Usuario">
-              <ul className="space-y-3 mb-4">
-                <ListItem text={<>Vuelve a ingresar el <strong>Usuario</strong> enviado a tu correo.</>} />
-                <ListItem text={<>Copia las letras y números de la imagen (código captcha). Clic en <strong>Iniciar Sesión</strong>.</>} />
-                <ListItem text={<>Introduce la <strong>clave modificada</strong> en el Paso 3. Clic en <strong>Iniciar Sesión</strong>.</>} />
-              </ul>
-
-                {/* ÉNFASIS ESPECIAL SOLICITADO - NUEVO USUARIO */}
-                <div className="bg-red-50 text-red-900 p-5 rounded-xl ml-2 shadow-md my-5 relative overflow-hidden border-2 border-red-100 print:bg-white print:text-black print:border-slate-300">
-                  <div className="absolute top-0 right-0 p-4 opacity-10 text-red-600">
-                    <User size={64} />
-                  </div>
-                  <div className="relative z-10 flex gap-4 items-center">
-                    <div className="bg-white p-2 rounded-lg shadow-sm border border-red-100 text-red-500">
-                      <Shield size={24} />
+                            <div class="group p-5 bg-slate-50 hover:bg-white rounded-xl border border-slate-200 hover:border-cyan-300 transition-all duration-300">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <!-- Icono Key 18 -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-cyan-600"><path d="M10 21v-7m4 7v-7m-7 0h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1a2 2 0 0 1-2-2H8a2 2 0 0 0-2 2h-1a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-1m-7 7V7a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v7"/></svg>
+                                    <span class="font-bold text-slate-900 text-sm">Contraseña (4 números)</span>
+                                </div>
+                                <div class="text-sm text-slate-500 pl-8">
+                                    Revisa tus <span class="font-semibold text-cyan-700 bg-cyan-50 px-1 rounded">SMS</span> del celular
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <p className="text-sm font-medium leading-relaxed">
-                      Introduce un <span className="text-red-600 font-bold text-base">nuevo usuario</span> con letras y números <br/>
-                      <span className="text-red-700/80 text-xs">(mínimo 7 caracteres)</span>, y clic en <strong>Validar</strong>.
-                    </p>
-                  </div>
+                </div>
+            </div>
+
+            <!-- --- PART 1 --- -->
+            <div class="flex items-start gap-4 mb-8 border-b border-slate-200 pb-4 print-break-inside">
+                <div class="bg-cyan-100 p-3 rounded-xl text-cyan-800 shadow-sm print:bg-slate-100">
+                    <!-- Icono Monitor 24 -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class=""><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M12 17v4"/><path d="M8 21h8"/></svg>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-900 tracking-tight">PARTE 1: En el Navegador</h2>
+                    <p class="text-slate-500 text-sm uppercase tracking-wider font-medium mt-1">Configuración inicial de seguridad</p>
+                </div>
+            </div>
+
+            <div class="space-y-6 mb-16">
+                
+                <!-- Paso 1 -->
+                <div class="group bg-white rounded-xl p-6 shadow-sm border border-slate-100 hover:shadow-md hover:border-cyan-200 transition-all duration-300 print-break-inside print:shadow-none print:border-slate-300">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-slate-900 text-white font-bold text-lg shadow-lg shadow-cyan-500/20 group-hover:scale-110 transition-transform">
+                            01
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800">Entrar a la web</h3>
+                    </div>
+                    <div class="pl-4 md:pl-14 border-l-2 border-slate-100 group-hover:border-cyan-100 transition-colors">
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-3 text-sm text-slate-600 leading-relaxed group-hover:text-slate-700">
+                                <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0"></span>
+                                <span>Escribe en el buscador el portal oficial de banca por internet.</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-sm text-slate-600 leading-relaxed group-hover:text-slate-700">
+                                <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0"></span>
+                                <span>Entra a la primera opción.</span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
-              <ul className="space-y-3">
-                <ListItem text={<>Elige una imagen y escribe una frase. Clic en <strong>Continuar</strong>.</>} />
-                <ListItem text={<><strong>Clave transaccional:</strong> Escribe el código de 6 dígitos que te llegó por SMS, clic en <strong>Continuar</strong>.</>} />
-              </ul>
+                <!-- Paso 2 -->
+                <div class="group bg-white rounded-xl p-6 shadow-sm border border-slate-100 hover:shadow-md hover:border-cyan-200 transition-all duration-300 print-break-inside print:shadow-none print:border-slate-300">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-slate-900 text-white font-bold text-lg shadow-lg shadow-cyan-500/20 group-hover:scale-110 transition-transform">
+                            02
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800">Poner tus datos</h3>
+                    </div>
+                    <div class="pl-4 md:pl-14 border-l-2 border-slate-100 group-hover:border-cyan-100 transition-colors">
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-3 text-sm text-slate-600 leading-relaxed group-hover:text-slate-700">
+                                <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0"></span>
+                                <span>En <strong>Usuario</strong>, escribe el número de tu correo.</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-sm text-slate-600 leading-relaxed group-hover:text-slate-700">
+                                <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0"></span>
+                                <span>Copia las letras y números de la imagen (código captcha). Clic en <strong>Iniciar Sesión</strong>.</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-sm text-slate-600 leading-relaxed group-hover:text-slate-700">
+                                <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0"></span>
+                                <span>Escribe la <strong>clave de 4 números</strong> de tu SMS. Clic en <strong>Iniciar Sesión</strong>.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
 
-              <div className="mt-4 flex items-center gap-3 bg-rose-50 px-4 py-3 rounded-lg border border-rose-100 text-rose-800 text-sm font-medium">
-                  <AlertTriangle size={16} />
-                  Aparecerán las opciones "Registrar" y "Salir", elige "Salir" dos veces.
-              </div>
+                <!-- Paso 3 -->
+                <div class="group bg-white rounded-xl p-6 shadow-sm border border-slate-100 hover:shadow-md hover:border-cyan-200 transition-all duration-300 print-break-inside print:shadow-none print:border-slate-300">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-slate-900 text-white font-bold text-lg shadow-lg shadow-cyan-500/20 group-hover:scale-110 transition-transform">
+                            03
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800">Crear nueva Clave</h3>
+                    </div>
+                    <div class="pl-4 md:pl-14 border-l-2 border-slate-100 group-hover:border-cyan-100 transition-colors">
+                        <div class="space-y-4">
+                            
+                            <!-- ACCIÓN 1: Ingresar clave SMS -->
+                            <ul class="space-y-3">
+                                <li class="flex items-start gap-3 text-sm text-slate-600 leading-relaxed group-hover:text-slate-700">
+                                    <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0"></span>
+                                    <span>Escribe la <strong>clave de 4 números</strong> de tu SMS.</span>
+                                </li>
+                            </ul>
 
-              <div className="mt-6 text-center">
-                <span className="inline-block bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full border border-emerald-200">
-                  ¡LISTO! Cierra la página web.
-                </span>
-              </div>
-            </StepCard>
+                            <!-- ÉNFASIS ESPECIAL SOLICITADO - CONTRASEÑA NUEVA -->
+                            <div class="bg-red-50 text-red-900 p-5 rounded-xl ml-2 shadow-md my-5 relative overflow-hidden border-2 border-red-100 print:bg-white print:text-black print:border-slate-300">
+                                <!-- Background Icon (Lock 64) -->
+                                <div class="absolute top-0 right-0 p-4 opacity-10 text-red-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class=""><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                </div>
+                                <!-- Content -->
+                                <div class="relative z-10 flex gap-4 items-center">
+                                    <!-- Foreground Icon (Lock 24) -->
+                                    <div class="bg-white p-2 rounded-lg shadow-sm border border-red-100 text-red-500">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class=""><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                    </div>
+                                    <p class="text-sm font-medium leading-relaxed">
+                                        <span class="text-red-600 font-bold text-base">Requisito de Seguridad:</span> <br class='sm:hidden'/>
+                                        Escribe tu <strong>nueva clave</strong> dos veces. <br/>
+                                        <span class="text-red-700/80 text-xs">(Mínimo 10 caracteres, mayúsculas, minúsculas, números, signos. Ej: Maria.2024)</span>
+                                    </p>
+                                </div>
+                            </div>
 
-          </div>
 
+                            <!-- ACCIÓN 2: Código de 6 números -->
+                            <ul class="space-y-3">
+                                <li class="flex items-start gap-3 text-sm text-slate-600 leading-relaxed group-hover:text-slate-700">
+                                    <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0"></span>
+                                    <span>Escribe el <strong>código de 6 números</strong> que llegó por SMS. Clic en <strong>Continuar</strong>.</span>
+                                </li>
+                            </ul>
+                            
+                            <div class="flex items-center gap-3 bg-rose-50 px-4 py-3 rounded-lg border border-rose-100 text-rose-800 text-sm font-medium">
+                                <!-- Icono AlertTriangle 16 -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class=""><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                Aparecerán las opciones "Registrar" y "Salir", elige "Salir" dos veces.
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-          {/* --- PART 2 --- */}
-          <div className="print-break-inside">
-            <SectionHeader 
-              icon={<Smartphone size={24} />} 
-              title="PARTE 2: En la Aplicación" 
-              subtitle="UNIMÓVIL PLUS (Celular)"
-            />
+                <!-- Paso 4 -->
+                <div class="group bg-white rounded-xl p-6 shadow-sm border border-slate-100 hover:shadow-md hover:border-cyan-200 transition-all duration-300 print-break-inside print:shadow-none print:border-slate-300">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full bg-slate-900 text-white font-bold text-lg shadow-lg shadow-cyan-500/20 group-hover:scale-110 transition-transform">
+                            04
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-800">Personalización de Usuario</h3>
+                    </div>
+                    <div class="pl-4 md:pl-14 border-l-2 border-slate-100 group-hover:border-cyan-100 transition-colors">
+                        <ul class="space-y-3 mb-4">
+                            <li class="flex items-start gap-3 text-sm text-slate-600 leading-relaxed group-hover:text-slate-700">
+                                <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0"></span>
+                                <span>Vuelve a ingresar el <strong>Usuario</strong> enviado a tu correo.</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-sm text-slate-600 leading-relaxed group-hover:text-slate-700">
+                                <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0"></span>
+                                <span>Copia las letras y números de la imagen (código captcha). Clic en <strong>Iniciar Sesión</strong>.</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-sm text-slate-600 leading-relaxed group-hover:text-slate-700">
+                                <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0"></span>
+                                <span>Introduce la <strong>clave modificada</strong> en el Paso 3. Clic en <strong>Iniciar Sesión</strong>.</span>
+                            </li>
+                        </ul>
 
-            <div className="grid md:grid-cols-3 gap-6 mb-12">
-              
-              <AppCard number="5" title="Descargar">
-                <p className="text-sm text-slate-600 mb-2">Busca <strong>UNIMóvil Plus</strong> en la tienda de tu celular (Play Store).</p>
-                <div className="bg-slate-100 p-2 rounded text-xs text-center text-slate-500 font-mono">Instala y abre</div>
-              </AppCard>
+                        <!-- ÉNFASIS ESPECIAL SOLICITADO - NUEVO USUARIO -->
+                        <div class="bg-red-50 text-red-900 p-5 rounded-xl ml-2 shadow-md my-5 relative overflow-hidden border-2 border-red-100 print:bg-white print:text-black print:border-slate-300">
+                            <!-- Background Icon (User 64) -->
+                            <div class="absolute top-0 right-0 p-4 opacity-10 text-red-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class=""><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            </div>
+                            <div class="relative z-10 flex gap-4 items-center">
+                                <!-- Foreground Icon (Shield 24) -->
+                                <div class="bg-white p-2 rounded-lg shadow-sm border border-red-100 text-red-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class=""><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                </div>
+                                <p class="text-sm font-medium leading-relaxed">
+                                    Introduce un <span class="text-red-600 font-bold text-base">nuevo usuario</span> con letras y números <br/>
+                                    <span class="text-red-700/80 text-xs">(mínimo 7 caracteres)</span>, y clic en <strong>Validar</strong>.
+                                </p>
+                            </div>
+                        </div>
 
-              <AppCard number="6" title="Ingresar">
-                <ul className="text-sm text-slate-600 space-y-2">
-                  <li>Pon tu <strong>NUEVO USUARIO</strong>.</li>
-                  <li>Pon tu <strong>NUEVA CONTRASEÑA</strong>.</li>
-                  <li className="flex items-center gap-2 bg-blue-50 p-1.5 rounded text-blue-800 text-xs font-medium">
-                    <CheckCircle size={12}/> Tickear la imagen
-                  </li>
-                  <li>Clic <strong>Iniciar Sesión</strong>.</li>
-                </ul>
-              </AppCard>
+                        <ul class="space-y-3">
+                            <li class="flex items-start gap-3 text-sm text-slate-600 leading-relaxed group-hover:text-slate-700">
+                                <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0"></span>
+                                <span>Elige una imagen y escribe una frase. Clic en <strong>Continuar</strong>.</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-sm text-slate-600 leading-relaxed group-hover:text-slate-700">
+                                <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0"></span>
+                                <span><strong>Clave transaccional:</strong> Escribe el código de 6 dígitos que te llegó por SMS, clic en <strong>Continuar</strong>.</span>
+                            </li>
+                        </ul>
 
-              <AppCard number="7" title="Registrar">
-                <ul className="text-sm text-slate-600 space-y-2">
-                  <li>Presiona <strong>REGISTRAR</strong> y luego <strong>FINALIZAR</strong>.</li>
-                  <li>Toca <strong>"Solicitar token"</strong>.</li>
-                  <li>Pon el código SMS y presiona <strong>CONFIRMAR</strong>.</li>
-                  <li>Clic en <strong>Cerrar</strong>.</li>
-                </ul>
-              </AppCard>
+                        <div class="mt-4 flex items-center gap-3 bg-rose-50 px-4 py-3 rounded-lg border border-rose-100 text-rose-800 text-sm font-medium">
+                            <!-- Icono AlertTriangle 16 -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class=""><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                            Aparecerán las opciones "Registrar" y "Salir", elige "Salir" dos veces.
+                        </div>
+
+                        <div class="mt-6 text-center">
+                            <span class="inline-block bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full border border-emerald-200">
+                                ¡LISTO! Cierra la página web.
+                            </span>
+                        </div>
+                    </div>
+                </div>
 
             </div>
-          </div>
 
-          {/* --- SUCCESS FOOTER --- */}
-          <div className="bg-blue-100 rounded-2xl p-8 md:p-12 text-center text-slate-900 relative overflow-hidden shadow-2xl print:bg-white print:text-black print:border print:shadow-none">
-            <div className="relative z-10">
-              <div className="inline-flex p-3 bg-cyan-500/20 rounded-full text-cyan-700 mb-4 border border-cyan-500/30">
-                <CheckCircle size={32} />
-              </div>
-              <h2 className="text-2xl font-bold mb-2">Actualización de Token Exitoso</h2>
-              <p className="text-slate-600">¡FELICIDADES! Ya puedes usar tu banca móvil.</p>
+
+            <!-- --- PART 2 --- -->
+            <div class="print-break-inside">
+                <div class="flex items-start gap-4 mb-8 border-b border-slate-200 pb-4 print-break-inside">
+                    <div class="bg-cyan-100 p-3 rounded-xl text-cyan-800 shadow-sm print:bg-slate-100">
+                        <!-- Icono Smartphone 24 -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class=""><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-900 tracking-tight">PARTE 2: En la Aplicación</h2>
+                        <p class="text-slate-500 text-sm uppercase tracking-wider font-medium mt-1">UNIMÓVIL PLUS (Celular)</p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6 mb-12">
+                    
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100 relative overflow-hidden group hover:-translate-y-1 transition-all duration-300 print-break-inside print:shadow-none print:border-slate-300">
+                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-300 to-blue-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="font-bold text-lg text-slate-800">Descargar</h4>
+                            <span class="text-slate-200 text-4xl font-black opacity-50 select-none">5</span>
+                        </div>
+                        <p class="text-sm text-slate-600 mb-2">Busca <strong>UNIMóvil Plus</strong> en la tienda de tu celular (Play Store).</p>
+                        <div class="bg-slate-100 p-2 rounded text-xs text-center text-slate-500 font-mono">Instala y abre</div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100 relative overflow-hidden group hover:-translate-y-1 transition-all duration-300 print-break-inside print:shadow-none print:border-slate-300">
+                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-300 to-blue-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="font-bold text-lg text-slate-800">Ingresar</h4>
+                            <span class="text-slate-200 text-4xl font-black opacity-50 select-none">6</span>
+                        </div>
+                        <ul class="text-sm text-slate-600 space-y-2">
+                            <li>Pon tu <strong>NUEVO USUARIO</strong>.</li>
+                            <li>Pon tu <strong>NUEVA CONTRASEÑA</strong>.</li>
+                            <li class="flex items-center gap-2 bg-blue-50 p-1.5 rounded text-blue-800 text-xs font-medium">
+                                <!-- Icono CheckCircle 12 -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class=""><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+                                Tickear la imagen
+                            </li>
+                            <li>Clic <strong>Iniciar Sesión</strong>.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 shadow-sm border border-slate-100 relative overflow-hidden group hover:-translate-y-1 transition-all duration-300 print-break-inside print:shadow-none print:border-slate-300">
+                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-300 to-blue-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="font-bold text-lg text-slate-800">Registrar</h4>
+                            <span class="text-slate-200 text-4xl font-black opacity-50 select-none">7</span>
+                        </div>
+                        <ul class="text-sm text-slate-600 space-y-2">
+                            <li>Presiona <strong>REGISTRAR</strong> y luego <strong>FINALIZAR</strong>.</li>
+                            <li>Toca <strong>"Solicitar token"</strong>.</li>
+                            <li>Pon el código SMS y presiona <strong>CONFIRMAR</strong>.</li>
+                            <li>Clic en <strong>Cerrar</strong>.</li>
+                        </ul>
+                    </div>
+
+                </div>
             </div>
-          </div>
 
-          {/* --- NUEVA UBICACIÓN DEL BOTÓN DE DESCARGA (AL FINAL DE LA PÁGINA) --- */}
-          <div className="py-12 flex justify-center no-print">
-            <button 
-              onClick={handleDownloadPDF}
-              disabled={isGenerating}
-              className="group relative inline-flex items-center justify-center px-8 py-3 font-semibold text-white transition-all duration-200 bg-emerald-600 rounded-full hover:bg-emerald-700 hover:shadow-lg hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isGenerating ? (
-                <>
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Generando PDF...
-                </>
-              ) : (
-                <>
-                  <Download size={18} className="mr-2 group-hover:scale-110 transition-transform" />
-                  Descargar Guía Completa en PDF
-                </>
-              )}
-            </button>
-          </div>
+            <!-- --- SUCCESS FOOTER --- -->
+            <div class="bg-blue-100 rounded-2xl p-8 md:p-12 text-center text-slate-900 relative overflow-hidden shadow-2xl print:bg-white print:text-black print:border print:shadow-none">
+                <div class="relative z-10">
+                    <div class="inline-flex p-3 bg-cyan-500/20 rounded-full text-cyan-700 mb-4 border border-cyan-500/30">
+                        <!-- Icono CheckCircle 32 -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class=""><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+                    </div>
+                    <h2 class="text-2xl font-bold mb-2">Actualización de Token Exitoso</h2>
+                    <p class="text-slate-600">¡FELICIDADES! Ya puedes usar tu banca móvil.</p>
+                </div>
+            </div>
+
+            <!-- --- UBICACIÓN DEL BOTÓN DE DESCARGA (AL FINAL DE LA PÁGINA) --- -->
+            <div class="py-12 flex justify-center no-print">
+                <button 
+                    id="pdf-download-button"
+                    onclick="handleDownloadPDF()"
+                    class="group relative inline-flex items-center justify-center px-8 py-3 font-semibold text-white transition-all duration-200 bg-emerald-600 rounded-full hover:bg-emerald-700 hover:shadow-lg hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <!-- Icono Download 18 -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2 group-hover:scale-110 transition-transform"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Descargar Guía Completa en PDF
+                </button>
+            </div>
 
         </main>
-      </div> {/* Cierre del div ref={printRef} */}
     </div>
-  );
-};
-
-// --- Componentes Estéticos Auxiliares ---
-// (No se modifican para cumplir con la restricción)
-
-const SectionHeader = ({ icon, title, subtitle }) => (
-  <div className="flex items-start gap-4 mb-8 border-b border-slate-200 pb-4 print-break-inside">
-    <div className="bg-cyan-100 p-3 rounded-xl text-cyan-800 shadow-sm print:bg-slate-100">
-      {icon}
-    </div>
-    <div>
-      <h2 className="text-2xl font-bold text-slate-900 tracking-tight">{title}</h2>
-      <p className="text-slate-500 text-sm uppercase tracking-wider font-medium mt-1">{subtitle}</p>
-    </div>
-  </div>
-);
-
-const StepCard = ({ number, title, children }) => (
-  <div className="group bg-white rounded-xl p-6 shadow-sm border border-slate-100 hover:shadow-md hover:border-cyan-200 transition-all duration-300 print-break-inside print:shadow-none print:border-slate-300">
-    <div className="flex items-center gap-4 mb-6">
-      <div className="flex items-center justify-center w-10 h-10 rounded-full bg-slate-900 text-white font-bold text-lg shadow-lg shadow-cyan-500/20 group-hover:scale-110 transition-transform">
-        {number}
-      </div>
-      <h3 className="text-xl font-bold text-slate-800">{title}</h3>
-    </div>
-    <div className="pl-4 md:pl-14 border-l-2 border-slate-100 group-hover:border-cyan-100 transition-colors">
-      {children}
-    </div>
-  </div>
-);
-
-const AppCard = ({ number, title, children }) => (
-  <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-100 relative overflow-hidden group hover:-translate-y-1 transition-all duration-300 print-break-inside print:shadow-none print:border-slate-300">
-    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-300 to-blue-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
-    <div className="flex justify-between items-center mb-4">
-      <h4 className="font-bold text-lg text-slate-800">{title}</h4>
-      <span className="text-slate-200 text-4xl font-black opacity-50 select-none">{number}</span>
-    </div>
-    {children}
-  </div>
-);
-
-const ListItem = ({ text }) => (
-  <li className="flex items-start gap-3 text-sm text-slate-600 leading-relaxed group-hover:text-slate-700">
-    <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0"></span>
-    <span>{text}</span>
-  </li>
-);
-
-export default App;
+</body>
+</html>
 
