@@ -3,51 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Banco Fortaleza | Simulador & Solicitud</title>
-    
-    <!-- Tailwind CSS -->
+    <title>Calculadora Proyecta Fortaleza | Banco Fortaleza</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:ital,wght@0,400;0,600;0,700;1,600&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: { 
-                        sans: ['Inter', 'sans-serif'],
-                        display: ['Poppins', 'sans-serif']
+                        sans: ['Inter', 'sans-serif'], 
+                        display: ['Poppins', 'sans-serif'] 
                     },
                     colors: {
-                        brand: {
-                            navy: '#002855',
-                            blue: '#004B87',
-                            orange: '#FF6B00',
-                            light: '#F8FAFC',
-                            gray: '#64748B',
-                            ivory: '#FDFDFD' 
-                        }
-                    },
-                    boxShadow: {
-                        'soft': '0 10px 40px -10px rgba(0, 40, 85, 0.08)',
-                        'floating': '0 25px 50px -12px rgba(0, 0, 0, 0.15)',
-                        'glow': '0 0 20px rgba(255, 107, 0, 0.3)',
-                        'inner-light': 'inset 0 2px 4px 0 rgba(255, 255, 255, 0.3)'
+                        brand: { navy: '#002855', blue: '#004B87', orange: '#FF6B00', light: '#F8FAFC' }
                     },
                     animation: {
-                        'slide-down': 'slideDown 0.4s ease-out forwards',
-                        'fade-in': 'fadeIn 0.5s ease-out forwards',
-                        'pulse-slow': 'pulse 3s infinite',
-                        'shine': 'shine 3s infinite'
+                        'bar-down': 'barDown 0.8s cubic-bezier(0.65, 0, 0.35, 1) forwards',
+                        'logo-fade': 'logoFade 1s ease-out 0.6s forwards',
+                        'text-reveal': 'textReveal 0.8s ease-out 1s forwards',
+                        'sweep-shine': 'sweepShine 4s linear infinite'
                     },
                     keyframes: {
-                        slideDown: { '0%': { opacity: '0', transform: 'translateY(-10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
-                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
-                        shine: { '0%': { backgroundPosition: '200% center' }, '100%': { backgroundPosition: '-200% center' } }
+                        barDown: { '0%': { transform: 'translateY(-100%)' }, '100%': { transform: 'translateY(0)' } },
+                        logoFade: { '0%': { opacity: '0', transform: 'scale(0.9) translateY(0)' }, '100%': { opacity: '1', transform: 'scale(1) translateY(0)' } },
+                        textReveal: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        sweepShine: { '0%': { left: '-100%' }, '30%': { left: '100%' }, '100%': { left: '100%' } }
                     }
                 }
             }
@@ -55,564 +37,529 @@
     </script>
 
     <style>
-        /* Fondo Blanco Elegante con luz ambiental sutil */
-        body { 
-            background-color: #FDFDFD;
-            background-image: radial-gradient(circle at 15% 10%, rgba(0, 75, 135, 0.03) 0%, transparent 40%),
-                              radial-gradient(circle at 85% 90%, rgba(255, 107, 0, 0.03) 0%, transparent 40%);
-            background-attachment: fixed;
+        body { background-color: #FDFDFD; overflow-x: hidden; font-family: 'Inter', sans-serif; }
+        
+        /* Franja Azul corregida: Azul Marino Sólido como los botones */
+        .blue-franja { 
+            height: 110px; 
+            background: #002855;
+            width: 100%; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            z-index: 0; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            overflow: hidden;
+        }
+
+        .franja-shine {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 40%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            z-index: 1;
+        }
+
+        .glass-dark {
+            background: linear-gradient(145deg, #002855 0%, #001228 100%);
+            box-shadow: 0 40px 80px -20px rgba(0, 15, 40, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hover-grow { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2); }
+        .hover-grow:hover { transform: scale(1.04); }
+
+        .glow-main { transition: all 0.4s ease; cursor: default; }
+        .glow-main:hover { transform: scale(1.02); }
+        .glow-main:hover span {
+            color: #FFFFFF !important;
+            text-shadow: 0 0 25px rgba(255, 255, 255, 0.4);
+        }
+        .glow-main span { transition: all 0.4s ease; display: inline-block; }
+
+        .slider-premium { -webkit-appearance: none; width: 100%; height: 5px; background: #E2E8F0; border-radius: 999px; outline: none; }
+        .slider-premium::-webkit-slider-thumb { 
+            -webkit-appearance: none; width: 28px; height: 28px; 
+            background: #FF6B00; border-radius: 50%; cursor: pointer; 
+            border: 4px solid white; box-shadow: 0 4px 15px rgba(0,0,0,0.15); 
+            transition: transform 0.2s ease;
         }
         
-        /* --- SLIDERS ROBUSTOS (CORRECCIÓN VISUAL) --- */
-        
-        /* Reset básico para el input */
-        input[type=range] {
-            -webkit-appearance: none; /* Elimina estilo por defecto */
-            width: 100%;
-            background: transparent; /* Fondo transparente contenedor */
-            height: 32px; /* Altura suficiente para el thumb */
-            margin: 0;
-            cursor: pointer;
-        }
+        .module-btn { transition: all 0.3s ease; background: #002855; color: #FFFFFF; border: none; }
+        .module-btn:hover { transform: translateY(-2px); background: #003a7a; }
+        .module-btn.active-tab { background: #FF6B00 !important; color: white !important; box-shadow: 0 10px 20px rgba(255, 107, 0, 0.3); border-color: #002855 !important; }
 
-        /* ESTILO DE LA LÍNEA (TRACK) - CHROME/SAFARI/OPERA */
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 8px; /* Altura de la línea */
-            background: #CBD5E1; /* Gris visible (Slate-300) */
-            border-radius: 999px;
-            border: 1px solid #94A3B8; /* Borde sutil para asegurar contraste */
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-        }
+        .product-pill { transition: all 0.3s; border: 1px solid #E2E8F0; background: white; color: #64748B; }
+        .product-pill:hover { transform: scale(1.05); border-color: #002855; color: #002855; }
+        .product-pill.active { background: #002855 !important; color: white !important; border-color: #002855 !important; }
 
-        /* ESTILO DE LA LÍNEA (TRACK) - FIREFOX */
-        input[type=range]::-moz-range-track {
-            width: 100%;
-            height: 8px;
-            background: #CBD5E1;
-            border-radius: 999px;
-            border: 1px solid #94A3B8;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-        }
+        .card-pro { transition: all 0.4s ease; border: 1px solid #F1F5F9; background: white; }
+        .card-pro:hover { transform: translateY(-8px); border-color: #FF6B00; box-shadow: 0 20px 40px -15px rgba(0,0,0,0.08); }
+        .card-pro .num-block { transition: all 0.3s; display: inline-block; }
+        .card-pro:hover .num-block { transform: scale(1.05); color: #002855 !important; }
 
-        /* ESTILO DE LA BOLA (THUMB) - CHROME/SAFARI */
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 32px;
-            width: 32px;
-            border-radius: 50%;
-            background: #FFFFFF;
-            border: 4px solid #FF6B00; /* Borde Naranja */
-            margin-top: -13px; /* (8px track - 32px thumb) / 2 - 1px border ajuste */
-            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
-            transition: transform 0.1s;
-        }
+        .btn-shine { position: relative; overflow: hidden; }
+        .btn-shine::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent); transform: rotate(45deg); animation: shine 5s infinite; }
+        @keyframes shine { 0% { left: -100%; } 100% { left: 100%; } }
 
-        /* ESTILO DE LA BOLA (THUMB) - FIREFOX */
-        input[type=range]::-moz-range-thumb {
-            height: 32px;
-            width: 32px;
-            border-radius: 50%;
-            background: #FFFFFF;
-            border: 4px solid #FF6B00;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
-            transition: transform 0.1s;
-        }
-
-        input[type=range]:hover::-webkit-slider-thumb { transform: scale(1.1); }
-        input[type=range]:hover::-moz-range-thumb { transform: scale(1.1); }
-        input[type=range]:focus { outline: none; }
-
-        /* --- BOTONES --- */
-        .module-btn { transition: all 0.3s ease; opacity: 0.7; transform: scale(0.98); }
-        .module-btn:hover { opacity: 1; transform: scale(1); }
-        .module-btn.active { 
-            opacity: 1; transform: scale(1); 
-            background: white; 
-            box-shadow: 0 20px 40px -10px rgba(0, 40, 85, 0.12); 
-            border: 1px solid rgba(255, 107, 0, 0.2);
-        }
-        .module-btn.active .icon-container { background: #FF6B00; color: white; box-shadow: 0 10px 20px -5px rgba(255, 107, 0, 0.4); }
-
-        /* Botones de Producto (Pills) */
-        .product-pill { transition: all 0.2s; border: 1px solid #E2E8F0; background: white; }
-        .product-pill:hover { border-color: #94A3B8; transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-        .product-pill.active { 
-            background: #002855; color: white; border-color: #002855; 
-            box-shadow: 0 10px 25px -5px rgba(0, 40, 85, 0.3); 
-            transform: scale(1.05); 
-        }
-
-        /* Efecto Destello en Botón Principal - NARANJA */
-        .btn-shine {
-            background-size: 200% auto;
-            background-image: linear-gradient(to right, #FF6B00 0%, #FF9500 51%, #FF6B00 100%);
-            transition: 0.5s;
-            color: white;
-        }
-        .btn-shine:hover { 
-            background-position: right center; 
-            box-shadow: 0 0 20px rgba(255, 107, 0, 0.6);
-        }
-
+        .modal-overlay { backdrop-filter: blur(15px); background: rgba(0, 15, 40, 0.85); }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
+
+        /* Alerta personalizada para no usar alert() nativo */
+        #custom-alert {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 200;
+            background: #002855;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid #FF6B00;
+        }
     </style>
 </head>
-<body class="antialiased min-h-screen flex flex-col items-center pt-8 pb-12 px-4 font-sans text-slate-800">
+<body class="antialiased text-slate-700 pb-20">
 
-    <!-- HEADER -->
-    <header class="mb-8 text-center animate-fade-in relative z-10">
-        <div class="inline-flex items-center gap-3 bg-white/80 backdrop-blur-md px-8 py-3 rounded-full shadow-soft mb-6 border border-white">
-            <i class="fa-solid fa-building-columns text-2xl text-brand-orange"></i>
-            <span class="font-display font-bold text-brand-navy tracking-tight text-xl">BANCO FORTALEZA</span>
+    <div id="custom-alert"></div>
+
+    <!-- CABECERA PREMIUM -->
+    <div class="blue-franja animate-bar-down">
+        <div class="franja-shine animate-sweep-shine"></div>
+    </div>
+    
+    <header class="relative z-10 text-center">
+        <div class="h-[110px] flex items-center justify-center opacity-0 animate-logo-fade">
+             <img src="https://i.ibb.co/8yB0N1b/logo-blanco.png" alt="Banco Fortaleza" class="h-16 drop-shadow-xl transition-transform hover:scale-110 cursor-pointer">
         </div>
-        <h1 class="text-4xl md:text-5xl font-display font-bold text-brand-navy mb-2 tracking-tight">Tu meta, nuestro plan.</h1>
-        <p class="text-slate-500 font-light text-lg">Simula y solicita tu producto ideal.</p>
+        <div class="pt-10 pb-8 opacity-0 animate-text-reveal">
+            <h1 class="text-4xl md:text-6xl font-display font-bold text-brand-navy tracking-tighter mb-4 italic hover-grow cursor-default">¡Donde tú estás primero!</h1>
+            <p class="text-slate-400 font-bold text-xs uppercase tracking-[0.4em]">Calcula tu DPF, Cajas de Ahorro y Créditos con precisión</p>
+        </div>
     </header>
 
-    <!-- CONTENEDOR PRINCIPAL -->
-    <main class="w-full max-w-5xl space-y-2">
-
-        <!-- PASO 1: SELECTOR DE MÓDULOS -->
-        <div class="grid grid-cols-3 gap-4 md:gap-6 mb-4">
-            <button onclick="selectModule('CREDITO')" id="mod-CREDITO" class="module-btn active p-5 rounded-[2rem] bg-white border border-slate-100 flex flex-col items-center gap-3 text-center group">
-                <div class="icon-container w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-slate-50 text-brand-navy flex items-center justify-center text-2xl md:text-3xl transition-all duration-300">
-                    <i class="fa-solid fa-hand-holding-dollar"></i>
-                </div>
-                <span class="font-display font-bold text-sm md:text-base text-brand-navy group-hover:text-brand-orange transition-colors">Préstamos</span>
+    <main class="max-w-6xl mx-auto px-4 relative z-20">
+        
+        <!-- SELECTOR DE MÓDULO -->
+        <div class="flex flex-wrap justify-center gap-4 mb-10">
+            <button onclick="changeMode('DPF')" id="btn-DPF" class="module-btn flex items-center gap-3 px-12 py-4 rounded-2xl font-bold active-tab">
+                <i class="fa-solid fa-chart-line"></i> DPF
             </button>
-
-            <button onclick="selectModule('AHORRO')" id="mod-AHORRO" class="module-btn p-5 rounded-[2rem] bg-white border border-slate-100 flex flex-col items-center gap-3 text-center group">
-                <div class="icon-container w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-slate-50 text-brand-navy flex items-center justify-center text-2xl md:text-3xl transition-all duration-300">
-                    <i class="fa-solid fa-piggy-bank"></i>
-                </div>
-                <span class="font-display font-bold text-sm md:text-base text-brand-navy group-hover:text-brand-orange transition-colors">Ahorro</span>
+            <button onclick="changeMode('AHORRO')" id="btn-AHORRO" class="module-btn flex items-center gap-3 px-12 py-4 rounded-2xl font-bold">
+                <i class="fa-solid fa-piggy-bank"></i> Ahorro
             </button>
-
-            <button onclick="selectModule('DPF')" id="mod-DPF" class="module-btn p-5 rounded-[2rem] bg-white border border-slate-100 flex flex-col items-center gap-3 text-center group">
-                <div class="icon-container w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-slate-50 text-brand-navy flex items-center justify-center text-2xl md:text-3xl transition-all duration-300">
-                    <i class="fa-solid fa-chart-line"></i>
-                </div>
-                <span class="font-display font-bold text-sm md:text-base text-brand-navy group-hover:text-brand-orange transition-colors">Inversión</span>
+            <button onclick="changeMode('CREDITO')" id="btn-CREDITO" class="module-btn flex items-center gap-3 px-12 py-4 rounded-2xl font-bold">
+                <i class="fa-solid fa-hand-holding-dollar"></i> Créditos
             </button>
         </div>
 
-        <!-- PASO 2: SELECTOR DE PRODUCTOS (PILLS CENTRADOS) -->
-        <div class="relative animate-slide-down z-20 py-1">
-            <div id="productsContainer" class="flex gap-3 overflow-x-auto hide-scrollbar p-2 justify-center">
-                <!-- Se llena con JS -->
-            </div>
-        </div>
+        <!-- PRODUCTOS -->
+        <div id="product-selectors" class="flex flex-wrap justify-center gap-2 mb-12 hide-scrollbar"></div>
 
-        <!-- PASO 3: SIMULADOR (TARJETA PRINCIPAL) -->
-        <div id="simulatorCard" class="bg-white rounded-[3rem] shadow-floating border border-white p-8 md:p-12 relative overflow-hidden animate-fade-in mt-4">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
             
-            <!-- Decoración sutil de fondo -->
-            <div class="absolute top-0 right-0 w-96 h-96 bg-brand-light rounded-bl-full opacity-50 pointer-events-none"></div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 relative z-10">
+            <!-- ÁREA DE INPUTS -->
+            <div class="lg:col-span-5 space-y-12 bg-white p-12 rounded-[3.5rem] border border-slate-50 shadow-xl">
                 
-                <!-- COLUMNA IZQUIERDA: CONTROLES -->
-                <div class="lg:col-span-7 space-y-10">
-                    
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-12 h-12 rounded-2xl bg-brand-orange text-white flex items-center justify-center shadow-lg shadow-orange-200">
-                            <i id="productIcon" class="fa-solid fa-car text-xl"></i>
-                        </div>
-                        <div>
-                            <h2 id="productTitle" class="text-2xl font-display font-bold text-brand-navy">Crédito Vehicular</h2>
-                            <p id="productDesc" class="text-sm text-slate-500">Compra tu auto nuevo o usado con las mejores tasas.</p>
+                <!-- Slider: Monto -->
+                <div>
+                    <div class="flex justify-between items-end mb-8">
+                        <label class="text-[10px] font-black text-slate-300 uppercase tracking-widest">Capital a Proyectar</label>
+                        <div class="flex items-baseline gap-1">
+                            <span id="display-monto" class="text-6xl font-display font-bold text-brand-navy tracking-tighter">0</span>
+                            <span class="text-2xl font-black text-brand-orange">Bs</span>
                         </div>
                     </div>
-
-                    <!-- Slider Monto -->
-                    <div>
-                        <div class="flex justify-between items-end mb-5">
-                            <label class="font-bold text-brand-navy uppercase text-xs tracking-widest text-opacity-70">Monto Solicitado</label>
-                            <div class="flex items-baseline gap-1">
-                                <span id="displayMonto" class="text-4xl font-display font-bold text-brand-navy tracking-tight">0</span>
-                                <span class="text-lg font-medium text-slate-400">Bs</span>
-                            </div>
-                        </div>
-                        <div class="px-2">
-                            <!-- STEP AÑADIDO: 100 -->
-                            <input type="range" id="inputMonto" step="100" oninput="calculate()">
-                        </div>
-                        <div class="flex justify-between text-xs font-semibold text-slate-400 mt-3 px-1">
-                            <span id="lblMinMonto">1k</span>
-                            <span id="lblMaxMonto">100k</span>
-                        </div>
+                    <input type="range" id="slider-monto" min="0" value="0" class="slider-premium" oninput="updateCalculations()">
+                    <div class="flex justify-between text-[10px] font-bold text-slate-300 mt-4 uppercase">
+                        <span id="min-monto-label">1,000 Bs</span>
+                        <span id="max-monto-label">10M Bs</span>
                     </div>
-
-                    <!-- Slider Plazo -->
-                    <div>
-                        <div class="flex justify-between items-end mb-5">
-                            <label class="font-bold text-brand-navy uppercase text-xs tracking-widest text-opacity-70">Plazo</label>
-                            <div class="flex items-baseline gap-1">
-                                <span id="displayPlazo" class="text-4xl font-display font-bold text-brand-navy tracking-tight">0</span>
-                                <span id="unitPlazo" class="text-lg font-medium text-slate-400">meses</span>
-                            </div>
-                        </div>
-                        <div class="px-2">
-                            <input type="range" id="inputPlazo" step="1" oninput="calculate()">
-                        </div>
-                        <div class="flex justify-between text-xs font-semibold text-slate-400 mt-3 px-1">
-                            <span id="lblMinPlazo">1</span>
-                            <span id="lblMaxPlazo">60</span>
-                        </div>
-                    </div>
-
-                    <!-- Info Requisitos Rápida -->
-                    <div class="bg-slate-50 p-5 rounded-2xl flex gap-4 border border-slate-100 items-start">
-                        <div class="mt-1 bg-white p-1 rounded-full text-brand-blue shadow-sm"><i class="fa-solid fa-check"></i></div>
-                        <div class="text-sm text-brand-navy/80">
-                            <span class="font-bold block text-brand-navy text-xs uppercase mb-1">Requisitos Básicos:</span>
-                            <p id="requirementsText" class="leading-relaxed font-light">Cedula de identidad, Respaldo de ingresos, Factura de servicios básicos.</p>
-                        </div>
-                    </div>
-
                 </div>
 
-                <!-- COLUMNA DERECHA: RESULTADOS (Dark Card) -->
-                <div class="lg:col-span-5 flex flex-col justify-between bg-brand-navy rounded-[2.5rem] p-10 text-white relative overflow-hidden shadow-2xl shadow-blue-900/20">
-                    
-                    <!-- Brillo de fondo -->
-                    <div class="absolute -top-20 -right-20 w-64 h-64 bg-brand-blue rounded-full blur-3xl opacity-50"></div>
-                    <div class="absolute bottom-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cube-coat.png')] opacity-5"></div>
-
-                    <div class="relative z-10 text-center lg:text-left">
-                        <p class="text-brand-orange font-bold text-xs uppercase tracking-widest mb-4" id="resultLabel">CUOTA ESTIMADA</p>
-                        
-                        <div class="flex items-baseline justify-center lg:justify-start gap-2 mb-2">
-                            <span id="resultValue" class="text-6xl font-display font-bold tracking-tight">0</span>
-                            <span class="text-2xl font-medium text-white/50">Bs</span>
-                        </div>
-                        <p id="resultSub" class="text-sm text-white/60 mb-8 font-light">Pago mensual aproximado</p>
-
-                        <div class="bg-white/10 rounded-2xl p-4 backdrop-blur-md border border-white/10 mb-4 flex justify-between items-center">
-                            <span class="text-sm text-white/80 font-light">Tasa Anual Ref.</span>
-                            <span id="rateValue" class="font-bold text-white bg-white/20 px-2 py-1 rounded-lg">0%</span>
-                        </div>
-                        
-                        <div id="capacityWarning" class="hidden bg-red-500/20 border border-red-500/30 p-3 rounded-xl text-xs text-red-100 mt-4 flex gap-2 items-start justify-center lg:justify-start backdrop-blur-sm">
-                             <i class="fa-solid fa-triangle-exclamation mt-0.5"></i>
-                             <span>Tu cuota excede el 40% de tu ingreso estimado.</span>
+                <!-- Slider: Plazo -->
+                <div>
+                    <div class="flex justify-between items-end mb-8">
+                        <label class="text-[10px] font-black text-slate-300 uppercase tracking-widest">Plazo del Plan</label>
+                        <div class="flex items-baseline gap-1">
+                            <span id="display-plazo" class="text-6xl font-display font-bold text-brand-navy tracking-tighter">0</span>
+                            <span id="unit-label" class="text-2xl font-black text-brand-orange uppercase">días</span>
                         </div>
                     </div>
+                    <input type="range" id="slider-plazo" class="slider-premium" oninput="updateCalculations()">
+                    <div class="flex justify-between text-[10px] font-bold text-slate-300 mt-4 uppercase">
+                        <span id="min-plazo-label">90</span>
+                        <span id="max-plazo-label">1,080</span>
+                    </div>
+                </div>
 
-                    <div class="mt-8 relative z-10">
-                        <button onclick="openLeadModal()" class="w-full py-5 btn-shine text-white font-bold text-lg rounded-2xl shadow-glow transition-all transform hover:-translate-y-1 flex justify-center items-center gap-3 group">
-                            <span>ME INTERESA</span>
-                            <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
-                        </button>
-                        <p class="text-center text-[10px] text-white/40 mt-4 tracking-wider uppercase">Evaluación sujeta a políticas de crédito</p>
+                <div class="pt-6 space-y-4">
+                    <button onclick="openLeadModal()" class="btn-shine w-full py-6 bg-brand-navy text-white font-bold rounded-3xl hover:bg-brand-blue transition-all flex items-center justify-center gap-4 text-xl shadow-2xl active:scale-95">
+                        <i class="fa-solid fa-crown text-brand-orange"></i> QUIERO MI PLAN
+                    </button>
+                    <button onclick="sendWhatsApp()" class="w-full py-5 border-2 border-emerald-500 text-emerald-600 font-bold rounded-3xl hover:bg-emerald-50 transition-all flex items-center justify-center gap-3">
+                        <i class="fa-brands fa-whatsapp text-3xl"></i> CONSULTAR POR WHATSAPP
+                    </button>
+                </div>
+            </div>
+
+            <!-- RESULTADOS -->
+            <div class="lg:col-span-7 space-y-10">
+                
+                <!-- CARD PRINCIPAL PREMIUM -->
+                <div class="glass-dark rounded-[4rem] p-14 text-white relative shadow-2xl overflow-hidden border border-white/5">
+                    <div class="relative z-10">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
+                            <p id="main-result-label" class="text-brand-orange font-bold text-sm uppercase tracking-[0.5em] tracking-widest">GANANCIA ESTIMADA TOTAL</p>
+                            <div class="flex items-center gap-4 bg-brand-orange px-6 py-3 rounded-2xl border border-white/30 shadow-lg hover-grow cursor-default">
+                                <span class="text-[10px] text-white font-black uppercase tracking-widest">Tasa Anual</span>
+                                <span id="rate-badge" class="text-white text-3xl font-display font-black">6.00%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-14">
+                            <div class="glow-main inline-block">
+                                <span id="main-result-value" class="text-[10rem] font-display font-bold tracking-tighter leading-none">0</span>
+                                <span class="text-5xl font-bold uppercase ml-4">Bs</span>
+                            </div>
+                        </div>
+
+                        <div id="secondary-result" class="grid grid-cols-2 gap-12 border-t border-white/10 pt-12">
+                            <!-- JS Injection -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FICHA PERSPECTIVA -->
+                <div class="px-4">
+                    <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-8 flex items-center gap-4">
+                        <span class="w-12 h-[1px] bg-slate-200"></span> COMPARATIVA DE TIEMPOS
+                    </h3>
+                    <div id="perspective-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- JS Cards -->
                     </div>
                 </div>
 
             </div>
         </div>
-
     </main>
 
-    <!-- MODAL POPUP (LEAD FORM) -->
-    <div id="leadModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-brand-navy/80 backdrop-blur-md transition-opacity opacity-0" id="modalBackdrop" onclick="closeLeadModal()"></div>
-        <div class="relative bg-white w-full max-w-md rounded-3xl shadow-2xl transform scale-95 opacity-0 transition-all duration-300 overflow-hidden" id="modalContent">
+    <!-- MODAL -->
+    <div id="leadModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-6 modal-overlay" onclick="if(event.target === this) closeLeadModal()">
+        <div class="bg-white w-full max-w-lg rounded-[4rem] overflow-hidden shadow-2xl border border-white/20 relative" onclick="event.stopPropagation()">
+            <button onclick="closeLeadModal()" class="absolute top-10 right-10 text-slate-300 hover:text-brand-orange transition-colors p-2"><i class="fa-solid fa-xmark text-3xl"></i></button>
             
-            <div class="bg-brand-navy p-8 text-white text-center relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cube-coat.png')] opacity-10"></div>
-                <button onclick="closeLeadModal()" class="absolute top-4 right-4 text-white/50 hover:text-white transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
-                <div class="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-brand-orange text-3xl mx-auto mb-4 backdrop-blur-sm border border-white/20 shadow-inner">
-                    <i class="fa-regular fa-paper-plane"></i>
+            <div class="p-14">
+                <div class="text-center mb-12">
+                    <div class="w-24 h-24 bg-brand-navy text-brand-orange rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-2xl relative rotate-3">
+                        <i class="fa-solid fa-gem text-4xl"></i>
+                    </div>
+                    <h2 class="text-4xl font-display font-bold text-brand-navy tracking-tight">Tu Plan VIP</h2>
+                    <p class="text-slate-400 text-lg mt-4 font-medium italic">Asesoría personalizada inmediata.</p>
                 </div>
-                <h3 class="text-2xl font-display font-bold">Solicitar Contacto</h3>
-                <p class="text-white/60 text-sm font-light mt-1">Un oficial experto te asesorará.</p>
-            </div>
-
-            <div class="p-8">
-                <form id="leadForm" onsubmit="event.preventDefault(); submitLead();" class="space-y-5">
-                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 text-center">
-                        <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest mb-1">INTERÉS EN</p>
-                        <p class="font-bold text-brand-navy text-lg" id="modalSummary">...</p>
+                
+                <div class="space-y-6">
+                    <div class="p-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 flex justify-between items-center">
+                        <div class="max-w-[60%]">
+                            <p class="text-[10px] font-black text-slate-400 uppercase mb-1">Producto Seleccionado</p>
+                            <span class="text-xs font-bold text-brand-navy leading-tight" id="modal-summary-prod">DPF Premium</span>
+                        </div>
+                        <span class="text-3xl font-black text-brand-orange" id="modal-summary-monto">0 Bs</span>
                     </div>
                     <div class="space-y-4">
-                        <div class="relative">
-                            <i class="fa-regular fa-user absolute left-4 top-4 text-slate-400"></i>
-                            <input type="text" required class="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 outline-none transition-all placeholder-slate-300 text-brand-navy font-medium" placeholder="Nombre Completo">
-                        </div>
-                        <div class="relative">
-                            <i class="fa-solid fa-mobile-screen absolute left-4 top-4 text-slate-400"></i>
-                            <input type="tel" required class="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 outline-none transition-all placeholder-slate-300 text-brand-navy font-medium" placeholder="Celular / WhatsApp">
-                        </div>
-                        <!-- Ingreso para validar 40% -->
-                        <div id="incomeInputGroup" class="relative">
-                            <i class="fa-solid fa-wallet absolute left-4 top-4 text-slate-400"></i>
-                            <input type="number" id="modalIngreso" required oninput="checkCapacity()" class="w-full pl-12 pr-12 py-3 bg-white border border-slate-200 rounded-xl focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 outline-none transition-all placeholder-slate-300 text-brand-navy font-bold" placeholder="Ingreso Mensual">
-                            <span class="absolute right-4 top-4 text-xs font-bold text-slate-400">Bs</span>
-                        </div>
-                        <p id="capacityMsg" class="text-xs text-red-500 mt-1 hidden text-center bg-red-50 p-2 rounded-lg border border-red-100"><i class="fa-solid fa-circle-exclamation mr-1"></i> Ingreso insuficiente para la cuota calculada.</p>
+                        <input type="text" id="leadName" placeholder="Nombre completo" class="w-full p-6 bg-slate-50 border-2 border-transparent focus:border-brand-orange rounded-3xl outline-none transition-all font-semibold text-lg shadow-inner">
+                        <input type="tel" id="leadPhone" placeholder="Celular / WhatsApp" class="w-full p-6 bg-slate-50 border-2 border-transparent focus:border-brand-orange rounded-3xl outline-none transition-all font-semibold text-lg shadow-inner">
                     </div>
-                    <button type="submit" id="btnSubmit" class="w-full py-4 bg-brand-navy hover:bg-brand-blue text-white font-bold rounded-xl shadow-lg transition-all mt-4">
-                        ENVIAR SOLICITUD
+                    <button id="submitBtn" onclick="submitLead()" class="btn-shine w-full py-6 bg-brand-orange text-white font-bold rounded-3xl shadow-2xl shadow-orange-600/40 hover:bg-orange-600 hover:scale-[1.01] transition-all text-sm uppercase tracking-widest mt-6">
+                        CONFIRMAR SOLICITUD
                     </button>
-                </form>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- LOGIC ENGINE -->
     <script>
-        // DATOS ACTUALIZADOS V25.1
-        const DATA = {
-            CREDITO: [
-                { 
-                    id: 'c_quiro', icon: 'fa-signature', name: 'Consumo Libre', desc: 'A sola firma. Sin garantía real.', 
-                    min: 14000, max: 210000, minP: 6, maxP: 48, unit: 'meses', 
-                    req: 'CI vigente, Respaldo de ingresos, Boletas de pago.', 
-                    tasas: [ 
-                        { min: 14000, max: 35000, t36: 0.18, t48: 0.185 },
-                        { min: 35001, max: 70000, t36: 0.17, t48: 0.175 },
-                        { min: 70001, max: 105000, t36: 0.16, t48: 0.165 },
-                        { min: 105001, max: 140000, t36: 0.15, t48: 0.155 },
-                        { min: 140001, max: 175000, t36: 0.145, t48: 0.150 },
-                        { min: 175001, max: 210000, t36: 0.14, t48: 0.145 }
-                    ]
-                },
-                { 
-                    id: 'c_personal', icon: 'fa-user-group', name: 'Con Garante', desc: 'Respaldo con garante personal.', 
-                    min: 14000, max: 210000, minP: 6, maxP: 60, unit: 'meses', 
-                    req: 'CI y respaldo de ingresos (Solicitante y Garante).', 
-                    tasas: [
-                        { min: 14000, max: 35000, r: 0.17 },
-                        { min: 35001, max: 70000, r: 0.16 },
-                        { min: 70001, max: 105000, r: 0.15 },
-                        { min: 105001, max: 140000, r: 0.14 },
-                        { min: 140001, max: 175000, r: 0.135 },
-                        { min: 175001, max: 210000, r: 0.13 }
-                    ]
-                },
-                { 
-                    id: 'c_vehicular', icon: 'fa-car', name: 'Vehicular', desc: 'Auto nuevo 0Km.', 
-                    min: 35000, max: 350000, minP: 12, maxP: 60, unit: 'meses', 
-                    req: 'Proforma del vehículo, Aporte propio 10-20%.', 
-                    tasas: [
-                        { min: 35000, max: 70000, r: 0.145 },
-                        { min: 70001, max: 105000, r: 0.14 },
-                        { min: 105001, max: 140000, r: 0.135 },
-                        { min: 140001, max: 175000, r: 0.13 },
-                        { min: 175001, max: 210000, r: 0.1275 },
-                        { min: 210001, max: 999999, r: 0.125 }
-                    ]
-                },
-                { 
-                    id: 'c_vivienda', icon: 'fa-house-chimney', name: 'Vivienda', desc: 'Compra o construcción.', 
-                    min: 140000, max: 3500000, minP: 60, maxP: 240, unit: 'meses', 
-                    req: 'Avalúo del inmueble, Aporte propio.', 
-                    tasas: [
-                        { min: 140000, max: 210000, t180: 0.12, t240: 0.1225 },
-                        { min: 210001, max: 350000, t180: 0.115, t240: 0.1175 },
-                        { min: 350001, max: 490000, t180: 0.11, t240: 0.1125 },
-                        { min: 490001, max: 700000, t180: 0.105, t240: 0.1075 },
-                        { min: 700001, max: 1050000, t180: 0.1025, t240: 0.105 },
-                        { min: 1050001, max: 3500000, t180: 0.10, t240: 0.1025 }
-                    ]
-                }
-            ],
+        const CONFIG = {
+            DPF: [{ id: 'dpf', prefix: 'Inversión', name: 'DPF Premium', icon: 'fa-chart-line', min: 1000, max: 10000000, minP: 90, maxP: 1080, unit: 'días', stepTime: 10 }],
             AHORRO: [
-                { 
-                    id: 'a_agil', icon: 'fa-bolt', name: 'Fortaleza Ágil', desc: '4.25% anual. Retiros ilimitados.', 
-                    min: 1000, max: 1000000, minP: 6, maxP: 60, unit: 'meses', 
-                    req: 'Solo CI vigente y monto de apertura (Bs 1,000).', 
-                    tasas: 0.0425, isGain: true 
-                },
-                { 
-                    id: 'a_crece', icon: 'fa-chart-line', name: 'Fortaleza Crece', desc: 'Tasa preferencial por saldo.', 
-                    min: 5000, max: 1000000, minP: 6, maxP: 60, unit: 'meses', 
-                    req: 'Monto apertura Bs 5,000. Hasta 5 retiros al mes.', 
-                    tasas: [ {min: 0, max: 350000, r: 0.045}, {min: 350001, max: 9999999, r: 0.055} ], 
-                    isGain: true 
-                }
+                { id: 'agil', prefix: 'Caja de Ahorro', name: 'Fortaleza Ágil', icon: 'fa-bolt', min: 1000, max: 10000000, minP: 1, maxP: 120, unit: 'meses', stepTime: 1 },
+                { id: 'crece', prefix: 'Caja de Ahorro', name: 'Fortaleza Crece', icon: 'fa-arrow-up-right-dots', min: 5000, max: 10000000, minP: 1, maxP: 120, unit: 'meses', stepTime: 1 }
             ],
-            DPF: [
-                { 
-                    id: 'dpf_escala', icon: 'fa-chart-bar', name: 'DPF Escala', desc: 'Hasta 6% según plazo (Días).', 
-                    min: 1000, max: 1000000, minP: 180, maxP: 1440, unit: 'días', 
-                    req: 'Monto mínimo Bs 1,000. CI vigente.', 
-                    tasas: [ 
-                        {min: 180, max: 360, r: 0.03}, 
-                        {min: 361, max: 539, r: 0.04}, 
-                        {min: 540, max: 720, r: 0.05}, 
-                        {min: 721, max: 9999, r: 0.06} 
-                    ], 
-                    isGain: true 
-                }
+            CREDITO: [
+                { id: 'consumo', prefix: 'Crédito', name: 'Consumo', icon: 'fa-cart-shopping', min: 14000, max: 210000, minP: 12, maxP: 60, unit: 'meses', stepTime: 1 },
+                { id: 'vehicular', prefix: 'Crédito', name: 'Vehicular', icon: 'fa-car', min: 35000, max: 350000, minP: 12, maxP: 60, unit: 'meses', stepTime: 1 },
+                { id: 'vivienda', prefix: 'Crédito', name: 'Vivienda Tradicional', icon: 'fa-house', min: 140000, max: 3500000, minP: 12, maxP: 240, unit: 'meses', stepTime: 1 }
             ]
         };
 
-        let currentModule = 'CREDITO';
-        let currentProd = DATA.CREDITO[0];
-        let currentCalculatedValue = 0;
+        const T1 = 15000;    
+        const T2 = 100000;   
+        const S1 = 50;
+        const S2 = 500;
+        const S3 = 10000;
 
-        const money = new Intl.NumberFormat('es-BO', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        let activeMode = 'DPF';
+        let activeProduct = CONFIG.DPF[0];
+        const formatter = new Intl.NumberFormat('es-BO', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
-        window.onload = () => { selectModule('CREDITO'); };
+        function showMessage(text) {
+            const el = document.getElementById('custom-alert');
+            el.innerText = text;
+            el.style.display = 'block';
+            setTimeout(() => { el.style.display = 'none'; }, 4000);
+        }
 
-        function selectModule(mod) {
-            currentModule = mod;
-            document.querySelectorAll('.module-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`mod-${mod}`).classList.add('active');
+        function changeMode(mode) {
+            activeMode = mode;
+            ['DPF', 'AHORRO', 'CREDITO'].forEach(m => {
+                const btn = document.getElementById(`btn-${m}`);
+                if(m === mode) {
+                    btn.classList.add('active-tab');
+                    btn.classList.remove('bg-brand-navy', 'text-white');
+                } else {
+                    btn.classList.remove('active-tab');
+                    btn.classList.add('bg-brand-navy', 'text-white');
+                }
+            });
+            renderProductPills();
+        }
 
-            const container = document.getElementById('productsContainer');
+        function renderProductPills() {
+            const container = document.getElementById('product-selectors');
             container.innerHTML = '';
-            
-            DATA[mod].forEach((prod, index) => {
+            CONFIG[activeMode].forEach((prod, idx) => {
                 const btn = document.createElement('button');
-                btn.className = `product-pill flex-shrink-0 px-6 py-2 rounded-full font-medium text-sm text-brand-navy bg-white shadow-sm flex items-center gap-2 ${index === 0 ? 'active' : ''}`;
-                btn.onclick = () => selectProduct(prod, btn);
-                btn.innerHTML = `<i class="fa-solid ${prod.icon}"></i> ${prod.name}`;
+                btn.className = `product-pill px-10 py-3 rounded-2xl text-[10px] font-bold transition-all uppercase tracking-widest flex-shrink-0 ${idx === 0 ? 'active' : ''}`;
+                btn.innerHTML = `<i class="fa-solid ${prod.icon} mr-2"></i> ${prod.name}`;
+                btn.onclick = () => {
+                    document.querySelectorAll('.product-pill').forEach(p => p.classList.remove('active'));
+                    btn.classList.add('active');
+                    setProduct(prod);
+                };
                 container.appendChild(btn);
             });
-            selectProduct(DATA[mod][0]);
+            setProduct(CONFIG[activeMode][0]);
         }
 
-        function selectProduct(prod, btnElement = null) {
-            currentProd = prod;
-            if(btnElement) {
-                document.querySelectorAll('.product-pill').forEach(b => b.classList.remove('active'));
-                btnElement.classList.add('active');
-            } else {
-                const firstBtn = document.querySelector('.product-pill');
-                if(firstBtn) firstBtn.classList.add('active');
-            }
-
-            document.getElementById('productTitle').textContent = prod.name;
-            document.getElementById('productDesc').textContent = prod.desc;
-            document.getElementById('productIcon').className = `fa-solid ${prod.icon} text-xl`;
-            document.getElementById('requirementsText').textContent = prod.req;
-
-            const slMonto = document.getElementById('inputMonto');
-            slMonto.min = prod.min; slMonto.max = prod.max; slMonto.value = prod.min;
-            slMonto.step = 100; // Paso de 100 BS
-            document.getElementById('lblMinMonto').textContent = abbreviate(prod.min);
-            document.getElementById('lblMaxMonto').textContent = abbreviate(prod.max);
-
-            const slPlazo = document.getElementById('inputPlazo');
-            slPlazo.min = prod.minP; slPlazo.max = prod.maxP; slPlazo.value = prod.minP;
-            document.getElementById('lblMinPlazo').textContent = prod.minP;
-            document.getElementById('lblMaxPlazo').textContent = prod.maxP;
-            document.getElementById('unitPlazo').textContent = prod.unit;
-
-            const resLabel = document.getElementById('resultLabel');
-            const resSub = document.getElementById('resultSub');
-            const incomeInput = document.getElementById('incomeInputGroup');
-
-            if (prod.isGain) {
-                resLabel.textContent = "GANANCIA TOTAL ESTIMADA";
-                resSub.textContent = "Al finalizar el periodo";
-                incomeInput.classList.add('hidden');
-                document.getElementById('modalIngreso').removeAttribute('required');
-            } else {
-                resLabel.textContent = "CUOTA MENSUAL ESTIMADA";
-                resSub.textContent = "Mensual aprox.";
-                incomeInput.classList.remove('hidden');
-                document.getElementById('modalIngreso').setAttribute('required', 'true');
-            }
-            calculate();
+        function getAmountFromSteps(steps, product) {
+            const stepsT1 = Math.max(0, (T1 - product.min) / S1);
+            const stepsT2 = (T2 - T1) / S2;
+            if (steps <= stepsT1) return product.min + (steps * S1);
+            if (steps <= (stepsT1 + stepsT2)) return T1 + ((steps - stepsT1) * S2);
+            return T2 + ((steps - stepsT1 - stepsT2) * S3);
         }
 
-        function calculate() {
-            const monto = parseFloat(document.getElementById('inputMonto').value);
-            const plazo = parseFloat(document.getElementById('inputPlazo').value);
+        function setProduct(prod) {
+            activeProduct = prod;
+            const sm = document.getElementById('slider-monto');
+            const sp = document.getElementById('slider-plazo');
+            const stepsT1 = Math.max(0, (T1 - prod.min) / S1);
+            const stepsT2 = (T2 - T1) / S2;
+            const stepsT3 = Math.max(0, (prod.max - Math.max(prod.min, T2)) / S3);
+            sm.max = stepsT1 + stepsT2 + stepsT3;
+            sm.value = 0; 
+            sp.min = prod.minP; sp.max = prod.maxP; sp.value = prod.minP; sp.step = prod.stepTime;
+            document.getElementById('min-monto-label').innerText = formatter.format(prod.min) + " Bs";
+            document.getElementById('max-monto-label').innerText = formatter.format(prod.max) + " Bs";
+            document.getElementById('min-plazo-label').innerText = prod.minP;
+            document.getElementById('max-plazo-label').innerText = prod.maxP;
+            document.getElementById('unit-label').innerText = prod.unit;
+            updateCalculations();
+        }
+
+        function getTasa(monto, plazo) {
+            // Lógica DPF según tabla
+            if (activeProduct.id === 'dpf') return (plazo < 200) ? 0.05 : 0.06;
+            // Lógica Ahorro Ágil
+            if (activeProduct.id === 'agil') return 0.0425;
+            // Lógica Ahorro Crece
+            if (activeProduct.id === 'crece') return (monto <= 350000) ? 0.045 : 0.055;
+            // Lógica Consumo según tabla escalonada
+            if (activeProduct.id === 'consumo') {
+                if (monto <= 35000) return 0.18;
+                if (monto <= 70000) return 0.17;
+                if (monto <= 105000) return 0.16;
+                if (monto <= 140000) return 0.15;
+                if (monto <= 175000) return 0.145;
+                return 0.14;
+            }
+            // Lógica Vehicular según tabla
+            if (activeProduct.id === 'vehicular') {
+                if (monto <= 70000) return 0.14;
+                if (monto <= 105000) return 0.135;
+                if (monto <= 140000) return 0.13;
+                if (monto <= 175000) return 0.125;
+                if (monto <= 210000) return 0.1225;
+                return 0.12;
+            }
+            // Lógica Vivienda Tradicional (Plazos > 180 meses cambian tasa)
+            if (activeProduct.id === 'vivienda') {
+                const isLongTerm = plazo > 180;
+                if (monto <= 210000) return isLongTerm ? 0.1225 : 0.12;
+                if (monto <= 350000) return isLongTerm ? 0.1175 : 0.115;
+                if (monto <= 490000) return isLongTerm ? 0.1125 : 0.11;
+                if (monto <= 700000) return isLongTerm ? 0.1075 : 0.105;
+                if (monto <= 1050000) return 0.1025;
+                return 0.10;
+            }
+            return 0.05;
+        }
+
+        function calculateResults(m, p, t) {
+            let res = 0;
+            if (activeMode !== 'CREDITO') {
+                // Interés simple anualizado según plazos
+                if (activeProduct.id === 'dpf') res = m * t * (p / 360);
+                else res = m * t * (p / 12);
+            } else {
+                // Cuota francesa: (Capital * i * (1+i)^n) / ((1+i)^n - 1)
+                const i = t / 12;
+                const cuotaBase = m * (i * Math.pow(1 + i, p)) / (Math.pow(1 + i, p) - 1);
+                // Seguro de desgravamen aproximado (0.6 por mil sobre saldo)
+                res = cuotaBase + (m * 0.0006);
+            }
+            return Math.round(res);
+        }
+
+        function updateCalculations() {
+            const steps = parseInt(document.getElementById('slider-monto').value);
+            const m = getAmountFromSteps(steps, activeProduct);
+            const p = parseFloat(document.getElementById('slider-plazo').value);
+            const t = getTasa(m, p);
             
-            // Determinar Tasa Dinámica
-            let tasa = 0;
-            if (Array.isArray(currentProd.tasas)) {
-                let criterio = (currentModule === 'DPF') ? plazo : monto;
-                const rango = currentProd.tasas.find(r => criterio >= r.min && criterio <= r.max);
+            document.getElementById('display-monto').innerText = formatter.format(m);
+            document.getElementById('display-plazo').innerText = p;
+            document.getElementById('rate-badge').innerText = `${(t*100).toFixed(2)}%`;
+            
+            const res = calculateResults(m, p, t);
+            document.getElementById('main-result-value').innerText = formatter.format(res);
+            
+            const infoBox = document.getElementById('secondary-result');
+            if (activeMode !== 'CREDITO') {
+                document.getElementById('main-result-label').innerText = "GANANCIA ESTIMADA TOTAL";
+                infoBox.innerHTML = `
+                    <div class="flex flex-col hover-grow cursor-default">
+                        <span class="text-white/40 text-[10px] font-black uppercase tracking-widest mb-3">Total a Recibir</span>
+                        <span class="text-white font-bold text-5xl tracking-tighter transition-colors duration-500">${formatter.format(m + res)} Bs</span>
+                    </div>
+                    <div class="flex flex-col border-l border-white/10 pl-10 hover-grow cursor-default">
+                        <span class="text-white/40 text-[10px] font-black uppercase tracking-widest mb-3">Rendimiento</span>
+                        <span class="text-brand-orange font-bold text-2xl tracking-tight uppercase italic">Garantizado</span>
+                    </div>`;
+            } else {
+                document.getElementById('main-result-label').innerText = "CUOTA MENSUAL ESTIMADA";
+                const ahorroDiario = Math.round(res/30);
+                infoBox.innerHTML = `
+                    <div class="flex flex-col hover-grow cursor-default">
+                        <span class="text-brand-orange text-[10px] font-black uppercase tracking-[0.2em] mb-3">AHORRO DIARIO META</span>
+                        <div class="flex items-center gap-4">
+                             <span class="text-white font-black text-6xl tracking-tighter transition-colors duration-500">${ahorroDiario} Bs</span>
+                             <span class="text-xs text-white/40 uppercase font-black">al día</span>
+                        </div>
+                    </div>
+                    <div class="flex flex-col border-l border-white/10 pl-10 hover-grow cursor-default">
+                        <span class="text-white/40 text-[10px] font-black uppercase tracking-widest mb-3">Sueldo Sugerido</span>
+                        <span class="text-white font-bold text-4xl tracking-tighter">${formatter.format(Math.round(res / 0.3))} Bs</span>
+                    </div>`;
+            }
+            renderPerspectives(m);
+        }
+
+        function renderPerspectives(m) {
+            const container = document.getElementById('perspective-grid');
+            container.innerHTML = '';
+            if (activeMode !== 'CREDITO') {
+                const intervals = activeProduct.id === 'dpf' 
+                    ? [{label: 'A 200 Días', p: 200}, {label: 'A 1 Año (360d)', p: 360}, {label: 'A 2 Años (720d)', p: 720}, {label: 'A 3 Años (1080d)', p: 1080}]
+                    : [{label: 'A 6 Meses', p: 6}, {label: 'A 1 Año', p: 12}, {label: 'A 2 Años', p: 24}, {label: 'A 5 Años', p: 60}];
                 
-                if (rango) {
-                    // Lógica especial para Créditos con doble columna de plazo
-                    if (rango.t36 && rango.t48) tasa = (plazo <= 36) ? rango.t36 : rango.t48;
-                    else if (rango.t180 && rango.t240) tasa = (plazo <= 180) ? rango.t180 : rango.t240;
-                    else tasa = rango.r;
-                }
+                intervals.forEach(item => {
+                    const tasa = getTasa(m, item.p);
+                    const ganancia = calculateResults(m, item.p, tasa);
+                    container.innerHTML += `
+                        <div class="card-pro p-8 rounded-[2.5rem] group">
+                            <div class="flex justify-between items-center mb-6">
+                                 <span class="text-[10px] font-bold text-brand-navy uppercase tracking-widest">${item.label}</span>
+                                 <span class="text-[10px] font-black bg-brand-orange text-white border border-brand-orange px-3 py-1.5 rounded-full uppercase hover-grow cursor-default">${(tasa*100).toFixed(2)}%</span>
+                            </div>
+                            <div class="num-block">
+                                <span class="text-4xl font-display font-bold text-brand-navy tracking-tighter">${formatter.format(ganancia)}</span> 
+                                <span class="text-xl font-bold text-brand-navy ml-1">Bs</span>
+                            </div>
+                            <div class="mt-6 pt-6 border-t border-slate-50 flex justify-between items-center">
+                                <span class="text-[9px] text-slate-800 font-bold uppercase tracking-wider">Monto Total Recibido:</span>
+                                <span class="text-sm font-black text-brand-orange">${formatter.format(m + ganancia)} Bs</span>
+                            </div>
+                        </div>
+                    `;
+                });
             } else {
-                tasa = currentProd.tasas;
+                const plazos = [12, 24, 36, 48, 60, 120, 240].filter(val => val <= activeProduct.maxP && val >= activeProduct.minP);
+                plazos.forEach(item => {
+                    const tasa = getTasa(m, item);
+                    const cuota = calculateResults(m, item, tasa);
+                    container.innerHTML += `
+                        <div class="card-pro p-8 rounded-[2.5rem] group ${item === parseFloat(document.getElementById('slider-plazo').value) ? 'border-brand-orange bg-orange-50/10' : ''}">
+                             <div class="flex justify-between items-center mb-6">
+                                 <span class="text-[10px] font-bold text-brand-navy uppercase tracking-widest">PLAZO ${item} MESES</span>
+                                 <i class="fa-solid fa-shield-halved text-brand-orange text-sm"></i>
+                            </div>
+                            <div class="num-block">
+                                <span class="text-4xl font-display font-bold text-brand-navy tracking-tighter">${formatter.format(cuota)}</span> 
+                                <span class="text-xl font-bold text-brand-navy ml-1">Bs</span>
+                            </div>
+                            <div class="mt-6 pt-6 border-t border-slate-50 flex justify-between items-center">
+                                <span class="text-[9px] text-slate-800 font-bold uppercase tracking-wider">Ingreso Mínimo Sugerido:</span>
+                                <span class="text-sm font-black text-brand-orange">${formatter.format(Math.round(cuota/0.3))} Bs</span>
+                            </div>
+                        </div>
+                    `;
+                });
             }
-
-            document.getElementById('displayMonto').textContent = money.format(monto);
-            document.getElementById('displayPlazo').textContent = plazo;
-            document.getElementById('rateValue').textContent = (tasa * 100).toFixed(2) + '% Anual';
-
-            let result = 0;
-            if (currentProd.isGain) {
-                if (currentModule === 'DPF') {
-                    result = monto * tasa * (plazo / 360);
-                } else {
-                    const vf = monto * Math.pow(1 + tasa/12, plazo);
-                    result = vf - monto;
-                }
-            } else {
-                const i = tasa / 12;
-                result = monto * (i * Math.pow(1+i, plazo)) / (Math.pow(1+i, plazo) - 1);
-            }
-
-            currentCalculatedValue = result;
-            document.getElementById('resultValue').textContent = money.format(result);
         }
 
-        function openLeadModal() {
-            const modal = document.getElementById('leadModal');
-            const backdrop = document.getElementById('modalBackdrop');
-            const content = document.getElementById('modalContent');
-            const monto = document.getElementById('inputMonto').value;
-            document.getElementById('modalSummary').textContent = `${currentProd.name} por ${money.format(monto)} Bs`;
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                backdrop.classList.remove('opacity-0');
-                content.classList.remove('opacity-0', 'scale-95');
-                content.classList.add('scale-100');
-            }, 10);
+        function openLeadModal() { 
+            const steps = parseInt(document.getElementById('slider-monto').value);
+            const m = getAmountFromSteps(steps, activeProduct);
+            document.getElementById('modal-summary-prod').innerText = `${activeProduct.prefix} ${activeProduct.name}`;
+            document.getElementById('modal-summary-monto').innerText = formatter.format(m) + " Bs";
+            document.getElementById('leadModal').classList.remove('hidden'); 
         }
 
-        function closeLeadModal() {
-            const modal = document.getElementById('leadModal');
-            const backdrop = document.getElementById('modalBackdrop');
-            const content = document.getElementById('modalContent');
-            backdrop.classList.add('opacity-0');
-            content.classList.remove('scale-100');
-            content.classList.add('opacity-0', 'scale-95');
-            setTimeout(() => modal.classList.add('hidden'), 300);
-        }
-
-        function checkCapacity() {
-            if(currentProd.isGain) return;
-            const ingreso = parseFloat(document.getElementById('modalIngreso').value) || 0;
-            const capacidad = ingreso * 0.40; 
-            const msg = document.getElementById('capacityMsg');
-            if (ingreso > 0 && currentCalculatedValue > capacidad) msg.classList.remove('hidden');
-            else msg.classList.add('hidden');
-        }
-
+        function closeLeadModal() { document.getElementById('leadModal').classList.add('hidden'); }
+        
         function submitLead() {
-            const btn = document.getElementById('btnSubmit');
-            const originalHTML = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
-            setTimeout(() => {
-                alert(`¡Gracias! Hemos recibido tu solicitud para ${currentProd.name}.`);
-                closeLeadModal();
-                btn.innerHTML = originalHTML;
-                btn.disabled = false;
-                document.getElementById('leadForm').reset();
-            }, 1500);
+            const name = document.getElementById('leadName').value;
+            if(!name) {
+                showMessage("Por favor, ingresa tu nombre.");
+                return;
+            }
+            showMessage(`¡Excelente ${name}! Tu solicitud ha sido recibida. Un oficial de Banco Fortaleza te contactará pronto.`);
+            closeLeadModal();
         }
 
-        function abbreviate(num) {
-            if (num >= 1000000) return (num/1000000) + 'M';
-            if (num >= 1000) return (num/1000) + 'k';
-            return num;
+        function sendWhatsApp() {
+            const monto = document.getElementById('display-monto').innerText;
+            const plazo = document.getElementById('display-plazo').innerText;
+            const res = document.getElementById('main-result-value').innerText;
+            const resLabel = document.getElementById('main-result-label').innerText;
+            
+            const msg = `SIMULACION BANCO FORTALEZA\n\n` +
+                        `- Producto: ${activeProduct.prefix} ${activeProduct.name}\n` +
+                        `- Monto: ${monto} Bs\n` +
+                        `- Plazo: ${plazo} ${activeProduct.unit}\n` +
+                        `- ${resLabel}: ${res} Bs\n\n` +
+                        `Deseo recibir más información para concretar mi solicitud.`;
+            
+            window.open(`https://wa.me/59164188659?text=${encodeURIComponent(msg)}`, '_blank');
         }
+
+        window.onload = () => changeMode('DPF');
     </script>
 </body>
 </html>
