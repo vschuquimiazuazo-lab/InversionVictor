@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Proyecta Fortaleza | Banco Fortaleza</title>
+    <title>Calculadora Fortaleza | Banco Fortaleza</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:ital,wght@0,400;0,600;0,700;1,600&display=swap" rel="stylesheet">
@@ -146,8 +146,8 @@
         <div class="h-[110px] flex items-center justify-center opacity-0 animate-logo-fade">
              <img src="https://i.ibb.co/8yB0N1b/logo-blanco.png" alt="Banco Fortaleza" class="h-10 md:h-14 drop-shadow-xl transition-all duration-1000 ease-in-out hover:scale-105 cursor-pointer">
         </div>
-        <div class="pt-6 md:pt-10 pb-4 md:pb-6 px-4 opacity-0 animate-text-reveal">
-            <h1 class="text-3xl md:text-5xl font-display font-bold text-brand-navy tracking-tighter mb-2 italic hover-grow cursor-default transition-all duration-700">¡Donde tú estás primero!</h1>
+        <div class="pt-6 md:pt-10 pb-8 md:pb-12 px-4 opacity-0 animate-text-reveal">
+            <h1 class="text-3xl md:text-5xl font-display font-bold text-brand-navy tracking-tighter mb-2 italic hover-grow cursor-default transition-all duration-700">Calculadora Fortaleza</h1>
             <p class="text-slate-400 font-bold text-[9px] md:text-xs uppercase tracking-[0.3em]">Proyecciones Financieras con Inteligencia</p>
         </div>
     </header>
@@ -155,7 +155,7 @@
     <main class="max-w-6xl mx-auto px-4 relative z-20">
         
         <!-- SELECTOR MÓDULO -->
-        <div class="flex flex-wrap justify-center gap-2 md:gap-4 mb-8 md:mb-10">
+        <div class="flex flex-wrap justify-center gap-2 md:gap-4 mb-4 md:mb-6">
             <button onclick="changeMode('DPF')" id="btn-DPF" class="module-btn flex items-center gap-2 md:gap-3 px-6 md:px-10 py-3 md:py-4 rounded-xl font-bold active-tab text-sm md:text-base">
                 <i class="fa-solid fa-chart-line"></i> DPF
             </button>
@@ -168,7 +168,7 @@
         </div>
 
         <!-- PRODUCTOS -->
-        <div id="product-selectors" class="flex flex-nowrap md:flex-wrap justify-start md:justify-center gap-2 mb-8 md:mb-10 overflow-x-auto py-3 md:py-4 hide-scrollbar px-2"></div>
+        <div id="product-selectors" class="flex flex-nowrap md:flex-wrap justify-start md:justify-center gap-2 mb-6 md:mb-8 overflow-x-auto py-3 md:py-4 hide-scrollbar px-2"></div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-10 items-start">
             
@@ -213,12 +213,9 @@
                         <i class="fa-brands fa-whatsapp text-2xl"></i> CONSULTAR POR WHATSAPP
                     </button>
 
-                    <!-- REQUISITOS (DINÁMICO CON PUNTEOS) -->
                     <div id="product-requirements" class="pt-2 px-1">
                         <h4 class="text-[8px] font-black text-brand-navy uppercase tracking-widest mb-2 border-b border-slate-100 pb-1">Condiciones del Plan</h4>
-                        <ul id="req-list" class="space-y-1.5">
-                            <!-- Inyectado por JS -->
-                        </ul>
+                        <ul id="req-list" class="space-y-1.5"></ul>
                     </div>
                 </div>
             </div>
@@ -226,7 +223,6 @@
             <!-- RESULTADOS -->
             <div class="lg:col-span-7 space-y-6 md:space-y-8">
                 
-                <!-- CARD PRINCIPAL -->
                 <div class="glass-dark rounded-[2.5rem] md:rounded-[3.5rem] p-8 md:p-12 text-white relative shadow-2xl overflow-hidden border border-white/5">
                     <div class="relative z-10">
                         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 md:mb-10">
@@ -244,37 +240,30 @@
                             </div>
                         </div>
 
-                        <div id="secondary-result" class="grid grid-cols-2 gap-6 border-t border-white/10 pt-8">
-                            <!-- Inyectado por JS -->
-                        </div>
+                        <div id="secondary-result" class="grid grid-cols-2 gap-6 border-t border-white/10 pt-8"></div>
                     </div>
                 </div>
 
-                <!-- PERSPECTIVAS -->
                 <div class="px-2">
                     <h3 class="text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] mb-6 flex items-center gap-3">
                         <span class="w-8 h-[1px] bg-slate-200"></span> PROYECCIÓN EN OTROS TIEMPOS
                     </h3>
-                    <div id="perspective-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Inyectado por JS -->
-                    </div>
+                    <div id="perspective-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
                 </div>
 
             </div>
         </div>
     </main>
 
-    <!-- MODAL MINIMALISTA -->
+    <!-- MODAL -->
     <div id="leadModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 modal-overlay" onclick="if(event.target === this) closeLeadModal()">
         <div class="bg-white w-full max-w-md rounded-[2rem] overflow-hidden shadow-2xl border border-white/20 relative" onclick="event.stopPropagation()">
             <button onclick="closeLeadModal()" class="absolute top-6 right-6 text-slate-300 hover:text-brand-orange transition-colors"><i class="fa-solid fa-xmark text-xl"></i></button>
-            
             <div class="p-8 md:p-10">
-                <div class="text-center mb-8">
+                <div class="text-center mb-6">
                     <h2 class="text-2xl font-display font-bold text-brand-navy tracking-tight">Solicitud Personalizada</h2>
                     <p class="text-slate-400 text-sm mt-1 font-medium italic">Un oficial senior te contactará en breve.</p>
                 </div>
-                
                 <div class="space-y-4">
                     <div class="p-5 bg-slate-50 rounded-xl border border-slate-100 flex justify-between items-center">
                         <div class="max-w-[70%]">
@@ -286,10 +275,21 @@
                     <div class="space-y-3">
                         <input type="text" id="leadName" placeholder="Tu nombre" class="w-full p-4 bg-slate-50 border border-slate-100 focus:border-brand-orange rounded-xl outline-none transition-all font-semibold text-sm">
                         <input type="tel" id="leadPhone" placeholder="Tu número de celular" class="w-full p-4 bg-slate-50 border border-slate-100 focus:border-brand-orange rounded-xl outline-none transition-all font-semibold text-sm">
+                        <select id="leadCity" class="w-full p-4 bg-slate-50 border border-slate-100 focus:border-brand-orange rounded-xl outline-none transition-all font-semibold text-sm text-slate-600 appearance-none cursor-pointer">
+                            <option value="" disabled selected>Selecciona tu ciudad</option>
+                            <option value="La Paz">La Paz</option>
+                            <option value="El Alto">El Alto</option>
+                            <option value="Santa Cruz">Santa Cruz</option>
+                            <option value="Cochabamba">Cochabamba</option>
+                            <option value="Oruro">Oruro</option>
+                            <option value="Potosí">Potosí</option>
+                            <option value="Tarija">Tarija</option>
+                            <option value="Chuquisaca">Chuquisaca</option>
+                            <option value="Beni">Beni</option>
+                            <option value="Pando">Pando</option>
+                        </select>
                     </div>
-                    <button onclick="submitLead()" class="btn-shine w-full py-4 bg-brand-orange text-white font-bold rounded-xl shadow-lg shadow-orange-600/20 hover:bg-orange-600 transition-all text-xs uppercase tracking-widest mt-2">
-                        CONFIRMAR Y ENVIAR
-                    </button>
+                    <button onclick="submitLead()" class="btn-shine w-full py-4 bg-brand-orange text-white font-bold rounded-xl shadow-lg shadow-orange-600/20 hover:bg-orange-600 transition-all text-xs uppercase tracking-widest mt-2">CONFIRMAR Y ENVIAR</button>
                 </div>
             </div>
         </div>
@@ -327,20 +327,13 @@
             ]
         };
 
-        const T1 = 15000;    
-        const T2 = 100000;   
-        const S1 = 50;
-        const S2 = 500;
-        const S3 = 10000;
-
-        let activeMode = 'DPF';
-        let activeProduct = CONFIG.DPF[0];
+        const T1 = 15000, T2 = 100000, S1 = 50, S2 = 500, S3 = 10000;
+        let activeMode = 'DPF', activeProduct = CONFIG.DPF[0];
         const formatter = new Intl.NumberFormat('es-BO', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
         function showMessage(text) {
             const el = document.getElementById('custom-alert');
-            el.innerText = text;
-            el.style.display = 'block';
+            el.innerText = text; el.style.display = 'block';
             setTimeout(() => { el.style.display = 'none'; }, 4000);
         }
 
@@ -348,11 +341,7 @@
             activeMode = mode;
             ['DPF', 'AHORRO', 'CREDITO'].forEach(m => {
                 const btn = document.getElementById(`btn-${m}`);
-                if(m === mode) {
-                    btn.classList.add('active-tab');
-                } else {
-                    btn.classList.remove('active-tab');
-                }
+                m === mode ? btn.classList.add('active-tab') : btn.classList.remove('active-tab');
             });
             renderProductPills();
         }
@@ -366,8 +355,7 @@
                 btn.innerHTML = `<i class="fa-solid ${prod.icon} mr-2"></i> ${prod.name}`;
                 btn.onclick = () => {
                     document.querySelectorAll('.product-pill').forEach(p => p.classList.remove('active'));
-                    btn.classList.add('active');
-                    setProduct(prod);
+                    btn.classList.add('active'); setProduct(prod);
                 };
                 container.appendChild(btn);
             });
@@ -375,8 +363,7 @@
         }
 
         function getAmountFromSteps(steps, product) {
-            const stepsT1 = Math.max(0, (T1 - product.min) / S1);
-            const stepsT2 = (T2 - T1) / S2;
+            const stepsT1 = Math.max(0, (T1 - product.min) / S1), stepsT2 = (T2 - T1) / S2;
             if (steps <= stepsT1) return product.min + (steps * S1);
             if (steps <= (stepsT1 + stepsT2)) return T1 + ((steps - stepsT1) * S2);
             return T2 + ((steps - stepsT1 - stepsT2) * S3);
@@ -384,30 +371,23 @@
 
         function setProduct(prod) {
             activeProduct = prod;
-            const sm = document.getElementById('slider-monto');
-            const sp = document.getElementById('slider-plazo');
-            const stepsT1 = Math.max(0, (T1 - prod.min) / S1);
-            const stepsT2 = (T2 - T1) / S2;
+            const sm = document.getElementById('slider-monto'), sp = document.getElementById('slider-plazo');
+            const stepsT1 = Math.max(0, (T1 - prod.min) / S1), stepsT2 = (T2 - T1) / S2;
             const stepsT3 = Math.max(0, (prod.max - Math.max(prod.min, T2)) / S3);
-            sm.max = stepsT1 + stepsT2 + stepsT3;
-            sm.value = 0; 
+            sm.max = stepsT1 + stepsT2 + stepsT3; sm.value = 0;
             sp.min = prod.minP; sp.max = prod.maxP; sp.value = prod.minP; sp.step = prod.stepTime;
             document.getElementById('min-monto-label').innerText = formatter.format(prod.min) + " Bs";
             document.getElementById('max-monto-label').innerText = formatter.format(prod.max) + " Bs";
             document.getElementById('min-plazo-label').innerText = prod.minP;
             document.getElementById('max-plazo-label').innerText = prod.maxP;
             document.getElementById('unit-label').innerText = prod.unit;
-            
-            // Renderizado de requisitos en punteos
-            const reqList = document.getElementById('req-list');
-            reqList.innerHTML = '';
+            const reqList = document.getElementById('req-list'); reqList.innerHTML = '';
             prod.req.forEach(item => {
                 const li = document.createElement('li');
                 li.className = "text-[10px] text-slate-900 leading-tight font-medium flex items-start gap-2";
                 li.innerHTML = `<i class="fa-solid fa-circle-check text-brand-orange mt-0.5 text-[8px]"></i> <span>${item}</span>`;
                 reqList.appendChild(li);
             });
-
             updateCalculations();
         }
 
@@ -416,20 +396,14 @@
             if (activeProduct.id === 'agil') return 0.0425;
             if (activeProduct.id === 'crece') return (monto <= 350000) ? 0.045 : 0.055;
             if (activeProduct.id === 'consumo') {
-                if (monto <= 35000) return 0.18;
-                if (monto <= 70000) return 0.17;
-                if (monto <= 105000) return 0.16;
-                if (monto <= 140000) return 0.15;
-                if (monto <= 175000) return 0.145;
-                return 0.14;
+                if (monto <= 35000) return 0.18; if (monto <= 70000) return 0.17;
+                if (monto <= 105000) return 0.16; if (monto <= 140000) return 0.15;
+                if (monto <= 175000) return 0.145; return 0.14;
             }
             if (activeProduct.id === 'vehicular') {
-                if (monto <= 70000) return 0.14;
-                if (monto <= 105000) return 0.135;
-                if (monto <= 140000) return 0.13;
-                if (monto <= 175000) return 0.125;
-                if (monto <= 210000) return 0.1225;
-                return 0.12;
+                if (monto <= 70000) return 0.14; if (monto <= 105000) return 0.135;
+                if (monto <= 140000) return 0.13; if (monto <= 175000) return 0.125;
+                if (monto <= 210000) return 0.1225; return 0.12;
             }
             if (activeProduct.id === 'vivienda') {
                 const isLongTerm = plazo > 180;
@@ -437,8 +411,7 @@
                 if (monto <= 350000) return isLongTerm ? 0.1175 : 0.115;
                 if (monto <= 490000) return isLongTerm ? 0.1125 : 0.11;
                 if (monto <= 700000) return isLongTerm ? 0.1075 : 0.105;
-                if (monto <= 1050000) return 0.1025;
-                return 0.10;
+                if (monto <= 1050000) return 0.1025; return 0.10;
             }
             return 0.05;
         }
@@ -446,8 +419,7 @@
         function calculateResults(m, p, t) {
             let res = 0;
             if (activeMode !== 'CREDITO') {
-                if (activeProduct.id === 'dpf') res = m * t * (p / 360);
-                else res = m * t * (p / 12);
+                activeProduct.id === 'dpf' ? res = m * t * (p / 360) : res = m * t * (p / 12);
             } else {
                 const i = t / 12;
                 const cuotaBase = m * (i * Math.pow(1 + i, p)) / (Math.pow(1 + i, p) - 1);
@@ -458,17 +430,13 @@
 
         function updateCalculations() {
             const steps = parseInt(document.getElementById('slider-monto').value);
-            const m = getAmountFromSteps(steps, activeProduct);
-            const p = parseFloat(document.getElementById('slider-plazo').value);
+            const m = getAmountFromSteps(steps, activeProduct), p = parseFloat(document.getElementById('slider-plazo').value);
             const t = getTasa(m, p);
-            
             document.getElementById('display-monto').innerText = formatter.format(m);
             document.getElementById('display-plazo').innerText = p;
             document.getElementById('rate-badge').innerText = `${(t*100).toFixed(2)}%`;
-            
             const res = calculateResults(m, p, t);
             document.getElementById('main-result-value').innerText = formatter.format(res);
-            
             const infoBox = document.getElementById('secondary-result');
             if (activeMode !== 'CREDITO') {
                 document.getElementById('main-result-label').innerText = "GANANCIA ESTIMADA";
@@ -500,60 +468,25 @@
         }
 
         function renderPerspectives(m) {
-            const container = document.getElementById('perspective-grid');
-            container.innerHTML = '';
-            const isCredito = activeMode === 'CREDITO';
-            const labelText = isCredito ? "Cuota Mensual" : "Ganancia Estimada";
-
+            const container = document.getElementById('perspective-grid'); container.innerHTML = '';
+            const isCredito = activeMode === 'CREDITO', labelText = isCredito ? "Cuota Mensual" : "Ganancia Estimada";
             if (!isCredito) {
-                const intervals = activeProduct.id === 'dpf' 
-                    ? [{label: 'A 200 Días', p: 200}, {label: 'A 1 Año', p: 360}, {label: 'A 2 Años', p: 720}, {label: 'A 3 Años', p: 1080}]
-                    : [{label: 'A 6 Meses', p: 6}, {label: 'A 1 Año', p: 12}, {label: 'A 2 Años', p: 24}, {label: 'A 5 Años', p: 60}];
-                
+                const intervals = activeProduct.id === 'dpf' ? [{label: 'A 200 Días', p: 200}, {label: 'A 1 Año', p: 360}, {label: 'A 2 Años', p: 720}, {label: 'A 3 Años', p: 1080}] : [{label: 'A 6 Meses', p: 6}, {label: 'A 1 Año', p: 12}, {label: 'A 2 Años', p: 24}, {label: 'A 5 Años', p: 60}];
                 intervals.forEach(item => {
-                    const tasa = getTasa(m, item.p);
-                    const ganancia = calculateResults(m, item.p, tasa);
-                    container.innerHTML += `
-                        <div class="card-pro p-6 rounded-2xl group">
-                            <div class="flex justify-between items-center mb-4">
-                                 <span class="text-[8px] font-bold text-brand-navy uppercase tracking-widest">${item.label}</span>
-                                 <span class="text-[8px] font-black text-brand-orange border border-brand-orange/20 px-2 py-1 rounded-md bg-orange-50/50">${(tasa*100).toFixed(2)}%</span>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="text-[8px] text-slate-400 font-bold uppercase mb-1">${labelText}</span>
-                                <div class="flex items-baseline">
-                                    <span class="text-3xl font-display font-bold text-brand-navy tracking-tighter">${formatter.format(ganancia)}</span> 
-                                    <span class="text-base font-bold text-brand-navy ml-1">Bs</span>
-                                </div>
-                            </div>
-                        </div>`;
+                    const tasa = getTasa(m, item.p), ganancia = calculateResults(m, item.p, tasa);
+                    container.innerHTML += `<div class="card-pro p-6 rounded-2xl group"><div class="flex justify-between items-center mb-4"><span class="text-[8px] font-bold text-brand-navy uppercase tracking-widest">${item.label}</span><span class="text-[8px] font-black text-brand-orange border border-brand-orange/20 px-2 py-1 rounded-md bg-orange-50/50">${(tasa*100).toFixed(2)}%</span></div><div class="flex flex-col"><span class="text-[8px] text-slate-400 font-bold uppercase mb-1">${labelText}</span><div class="flex items-baseline"><span class="text-3xl font-display font-bold text-brand-navy tracking-tighter">${formatter.format(ganancia)}</span><span class="text-base font-bold text-brand-navy ml-1">Bs</span></div></div></div>`;
                 });
             } else {
                 const plazos = [12, 24, 60, 120, 240].filter(val => val <= activeProduct.maxP && val >= activeProduct.minP);
                 plazos.forEach(item => {
-                    const tasa = getTasa(m, item);
-                    const cuota = calculateResults(m, item, tasa);
-                    container.innerHTML += `
-                        <div class="card-pro p-6 rounded-2xl group ${item === parseFloat(document.getElementById('slider-plazo').value) ? 'border-brand-orange bg-orange-50/20' : ''}">
-                             <div class="flex justify-between items-center mb-4">
-                                 <span class="text-[8px] font-bold text-brand-navy uppercase tracking-widest">Plazo ${item} Meses</span>
-                                 <i class="fa-solid fa-shield-halved text-brand-orange text-[10px]"></i>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="text-[8px] text-slate-400 font-bold uppercase mb-1">${labelText}</span>
-                                <div class="flex items-baseline">
-                                    <span class="text-3xl font-display font-bold text-brand-navy tracking-tighter">${formatter.format(cuota)}</span> 
-                                    <span class="text-base font-bold text-brand-navy ml-1">Bs</span>
-                                </div>
-                            </div>
-                        </div>`;
+                    const tasa = getTasa(m, item), cuota = calculateResults(m, item, tasa);
+                    container.innerHTML += `<div class="card-pro p-6 rounded-2xl group ${item === parseFloat(document.getElementById('slider-plazo').value) ? 'border-brand-orange bg-orange-50/20' : ''}"><div class="flex justify-between items-center mb-4"><span class="text-[8px] font-bold text-brand-navy uppercase tracking-widest">Plazo ${item} Meses</span><i class="fa-solid fa-shield-halved text-brand-orange text-[10px]"></i></div><div class="flex flex-col"><span class="text-[8px] text-slate-400 font-bold uppercase mb-1">${labelText}</span><div class="flex items-baseline"><span class="text-3xl font-display font-bold text-brand-navy tracking-tighter">${formatter.format(cuota)}</span><span class="text-base font-bold text-brand-navy ml-1">Bs</span></div></div></div>`;
                 });
             }
         }
 
         function openLeadModal() { 
-            const steps = parseInt(document.getElementById('slider-monto').value);
-            const m = getAmountFromSteps(steps, activeProduct);
+            const m = getAmountFromSteps(parseInt(document.getElementById('slider-monto').value), activeProduct);
             document.getElementById('modal-summary-prod').innerText = `${activeProduct.prefix} ${activeProduct.name}`;
             document.getElementById('modal-summary-monto').innerText = formatter.format(m) + " Bs";
             document.getElementById('modal-summary-label').innerText = activeMode === 'CREDITO' ? "Monto Solicitado" : "Monto a Invertir";
@@ -563,18 +496,29 @@
         function closeLeadModal() { document.getElementById('leadModal').classList.add('hidden'); }
         
         function submitLead() {
-            const name = document.getElementById('leadName').value;
-            if(!name) { showMessage("Por favor, ingresa tu nombre."); return; }
-            showMessage(`¡Excelente ${name}! Solicitud enviada correctamente.`);
-            closeLeadModal();
+            const name = document.getElementById('leadName').value, phone = document.getElementById('leadPhone').value, city = document.getElementById('leadCity').value;
+            if(!name || !phone || !city) { showMessage("Por favor, completa todos los campos."); return; }
+            showMessage(`¡Excelente ${name} de ${city}! Solicitud enviada correctamente.`); closeLeadModal();
         }
 
+        // FUNCIÓN ACTUALIZADA: Mensaje de WhatsApp formal y profesional
         function sendWhatsApp() {
             const monto = document.getElementById('display-monto').innerText;
             const plazo = document.getElementById('display-plazo').innerText;
             const res = document.getElementById('main-result-value').innerText;
             const resLabel = document.getElementById('main-result-label').innerText;
-            const msg = `SIMULACION BANCO FORTALEZA\n\n- Producto: ${activeProduct.prefix} ${activeProduct.name}\n- Monto: ${monto} Bs\n- Plazo: ${plazo} ${activeProduct.unit}\n- ${resLabel}: ${res} Bs\n\nDeseo recibir más información.`;
+            const tasa = document.getElementById('rate-badge').innerText;
+            
+            const msg = `*SIMULACIÓN BANCO FORTALEZA*\n` +
+                        `----------------------------------\n` +
+                        `¡Hola! Realicé una simulación en su sitio web y deseo recibir asesoramiento personalizado:\n\n` +
+                        `• *Producto:* ${activeProduct.prefix} ${activeProduct.name}\n` +
+                        `• *Monto:* ${monto} Bs\n` +
+                        `• *Plazo:* ${plazo} ${activeProduct.unit}\n` +
+                        `• *Tasa (TEA):* ${tasa}\n` +
+                        `• *${resLabel}:* ${res} Bs\n\n` +
+                        `¿Podría un oficial de negocios contactarme para dar curso a mi solicitud?`;
+            
             window.open(`https://wa.me/59164188659?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
