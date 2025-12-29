@@ -132,7 +132,6 @@
             font-size: 0.9rem;
         }
 
-        /* Estilo para el input de monto manual */
         .monto-input-wrapper { position: relative; display: flex; align-items: center; }
         .monto-input {
             width: 100%;
@@ -142,7 +141,7 @@
             font-family: 'Poppins', sans-serif;
             font-weight: 700;
             font-size: 2.5rem;
-            padding: 0.5rem 60px 0.5rem 0; /* Espacio para las flechas */
+            padding: 0.5rem 60px 0.5rem 0;
             outline: none;
             transition: border-color 0.3s ease;
         }
@@ -151,7 +150,6 @@
             .monto-input { font-size: 3rem; }
         }
 
-        /* Botones de incremento/decremento */
         .monto-arrows {
             position: absolute;
             right: 0;
@@ -173,6 +171,13 @@
         }
         .monto-arrow-btn:hover { background: #002855; color: white; }
         .monto-arrow-btn:active { transform: scale(0.9); }
+
+        .custom-select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23002855'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1rem;
+        }
     </style>
 </head>
 <body class="antialiased text-slate-700 pb-10 md:pb-20">
@@ -186,7 +191,8 @@
     
     <header class="relative z-10 text-center">
         <div class="h-[110px] flex items-center justify-center opacity-0 animate-logo-fade">
-             <img src="https://i.ibb.co/8yB0N1b/logo-blanco.png" alt="Banco Fortaleza" class="h-10 md:h-14 drop-shadow-xl transition-all duration-1000 ease-in-out hover:scale-105 cursor-pointer">
+             <!-- LOGO ACTUALIZADO -->
+             <img src="https://i.ibb.co/rLZLtT5/logo-blanco-naranja.png" alt="Banco Fortaleza" class="h-10 md:h-14 drop-shadow-xl transition-all duration-1000 ease-in-out hover:scale-105 cursor-pointer">
         </div>
         <div class="pt-6 md:pt-10 pb-8 md:pb-12 px-4 opacity-0 animate-text-reveal">
             <h1 class="text-3xl md:text-5xl font-display font-bold text-brand-navy tracking-tighter mb-2 italic hover-grow cursor-default transition-all duration-700">Calculadora Fortaleza</h1>
@@ -232,11 +238,11 @@
                                    placeholder="0"
                                    oninput="formatMontoInput(this)">
                             <div class="monto-arrows">
-                                <button onclick="stepMonto(1000)" class="monto-arrow-btn"><i class="fa-solid fa-chevron-up"></i></button>
-                                <button onclick="stepMonto(-1000)" class="monto-arrow-btn"><i class="fa-solid fa-chevron-down"></i></button>
+                                <button onclick="stepMonto(1000)" class="monto-arrow-btn" title="Aumentar 1.000"><i class="fa-solid fa-chevron-up"></i></button>
+                                <button onclick="stepMonto(-1000)" class="monto-arrow-btn" title="Disminuir 1.000"><i class="fa-solid fa-chevron-down"></i></button>
                             </div>
                         </div>
-                        <div class="flex justify-between text-[8px] font-bold text-slate-300 mt-2 uppercase">
+                        <div class="flex justify-between text-[8px] font-bold text-slate-300 mt-2 uppercase transition-colors duration-300" id="monto-labels-container">
                             <span id="min-monto-label">1.000 Bs</span>
                             <span id="max-monto-label">10M Bs</span>
                         </div>
@@ -259,16 +265,13 @@
                     </div>
                 </div>
 
-                <!-- BLOQUE ACCIONES ESCRITORIO (Visible solo en LG) -->
-                <div class="hidden lg:block bg-white p-6 md:p-10 rounded-[2.5rem] md:rounded-[3rem] border border-slate-50 shadow-xl space-y-6" id="actions-desktop">
-                    <!-- Contenido inyectado dinámicamente -->
-                </div>
+                <!-- BLOQUE ACCIONES ESCRITORIO -->
+                <div class="hidden lg:block bg-white p-6 md:p-10 rounded-[2.5rem] md:rounded-[3rem] border border-slate-50 shadow-xl space-y-6" id="actions-desktop"></div>
             </div>
 
             <!-- RESULTADOS -->
             <div class="lg:col-span-7 space-y-6 md:space-y-8">
                 
-                <!-- CARD PRINCIPAL -->
                 <div class="glass-dark rounded-[2.5rem] md:rounded-[3.5rem] p-8 md:p-12 text-white relative shadow-2xl overflow-hidden border border-white/5">
                     <div class="relative z-10">
                         <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 md:mb-10">
@@ -281,31 +284,24 @@
                         
                         <div class="mb-8 md:mb-10">
                             <div class="glow-main inline-block">
-                                <span id="main-result-value" class="text-6xl sm:text-8xl md:text-9xl font-display font-bold tracking-tighter leading-none">0</span>
+                                <span id="main-result-value" class="text-6xl sm:text-8xl md:text-9xl font-display font-bold tracking-tighter leading-none transition-all">0</span>
                                 <span class="text-2xl md:text-4xl font-bold uppercase ml-2">Bs</span>
                             </div>
                         </div>
 
-                        <div id="secondary-result" class="grid grid-cols-2 gap-6 border-t border-white/10 pt-8">
-                            <!-- JS Injection -->
-                        </div>
+                        <div id="secondary-result" class="grid grid-cols-2 gap-6 border-t border-white/10 pt-8"></div>
                     </div>
                 </div>
 
-                <!-- PERSPECTIVAS -->
                 <div class="px-2">
                     <h3 class="text-[8px] md:text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] mb-6 flex items-center gap-3">
                         <span class="w-8 h-[1px] bg-slate-200"></span> PROYECCIÓN EN OTROS TIEMPOS
                     </h3>
-                    <div id="perspective-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- JS Cards -->
-                    </div>
+                    <div id="perspective-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
                 </div>
 
-                <!-- BLOQUE ACCIONES MÓVIL (Visible solo debajo de LG) -->
-                <div class="lg:hidden bg-white p-6 rounded-[2.5rem] border border-slate-50 shadow-xl space-y-6 mb-10" id="actions-mobile">
-                    <!-- Contenido inyectado dinámicamente -->
-                </div>
+                <!-- BLOQUE ACCIONES MÓVIL -->
+                <div class="lg:hidden bg-white p-6 rounded-[2.5rem] border border-slate-50 shadow-xl space-y-6 mb-10" id="actions-mobile"></div>
 
             </div>
         </div>
@@ -331,7 +327,7 @@
                     <div class="space-y-3">
                         <input type="text" id="leadName" placeholder="Tu nombre" class="w-full p-4 bg-slate-50 border border-slate-100 focus:border-brand-orange rounded-xl outline-none transition-all font-semibold text-sm">
                         <input type="tel" id="leadPhone" placeholder="Tu número de celular" class="w-full p-4 bg-slate-50 border border-slate-100 focus:border-brand-orange rounded-xl outline-none transition-all font-semibold text-sm">
-                        <select id="leadCity" class="w-full p-4 bg-slate-50 border border-slate-100 focus:border-brand-orange rounded-xl outline-none transition-all font-semibold text-sm text-slate-600 appearance-none cursor-pointer">
+                        <select id="leadCity" class="w-full p-4 bg-slate-50 border border-slate-100 focus:border-brand-orange rounded-xl outline-none transition-all font-semibold text-sm text-slate-600 appearance-none cursor-pointer custom-select">
                             <option value="" disabled selected>Selecciona tu ciudad</option>
                             <option value="La Paz">La Paz</option>
                             <option value="El Alto">El Alto</option>
@@ -353,37 +349,19 @@
 
     <script>
         const CONFIG = {
-            DPF: [{ 
-                id: 'dpf', prefix: 'Inversión', name: 'DPF Premium', icon: 'fa-chart-line', min: 1000, max: 10000000, minP: 90, maxP: 1080, unit: 'días', stepTime: 10,
-                req: ["Tasa fija anual garantizada.", "Renovación automática disponible.", "Oferta limitada vigente hasta el 31/12/2025."]
-            }],
+            DPF: [{ id: 'dpf', prefix: 'Inversión', name: 'DPF Premium', icon: 'fa-chart-line', min: 1000, max: 10000000, minP: 90, maxP: 1080, unit: 'días', stepTime: 10, req: ["Tasa fija anual garantizada.", "Renovación automática disponible.", "Oferta limitada vigente hasta el 31/12/2025."] }],
             AHORRO: [
-                { 
-                    id: 'agil', prefix: 'Caja de Ahorro', name: 'Fortaleza Ágil', icon: 'fa-bolt', min: 1000, max: 10000000, minP: 1, maxP: 120, unit: 'meses', stepTime: 1,
-                    req: ["Retiros ilimitados sin costo.", "Cero cobro de mantenimiento mensual.", "Disponibilidad inmediata de fondos.", "Capitalización mensual de intereses."]
-                },
-                { 
-                    id: 'crece', prefix: 'Caja de Ahorro', name: 'Fortaleza Crece', icon: 'fa-arrow-up-right-dots', min: 5000, max: 10000000, minP: 1, maxP: 120, unit: 'meses', stepTime: 1,
-                    req: ["Tasa preferencial para saldos > Bs 350,000.", "Permite 5 retiros libres al mes.", "Sin cargos administrativos de mantenimiento.", "Ideal para ahorros progresivos."]
-                }
+                { id: 'agil', prefix: 'Caja de Ahorro', name: 'Fortaleza Ágil', icon: 'fa-bolt', min: 1000, max: 10000000, minP: 1, maxP: 120, unit: 'meses', stepTime: 1, req: ["Retiros ilimitados sin costo.", "Cero cobro de mantenimiento mensual.", "Disponibilidad inmediata de fondos.", "Capitalización mensual de intereses."] },
+                { id: 'crece', prefix: 'Caja de Ahorro', name: 'Fortaleza Crece', icon: 'fa-arrow-up-right-dots', min: 5000, max: 10000000, minP: 1, maxP: 120, unit: 'meses', stepTime: 1, req: ["Tasa preferencial para saldos > Bs 350,000.", "Permite 5 retiros libres al mes.", "Sin cargos administrativos de mantenimiento.", "Ideal para ahorros progresivos."] }
             ],
             CREDITO: [
-                { 
-                    id: 'consumo', prefix: 'Crédito', name: 'Consumo', icon: 'fa-cart-shopping', min: 14000, max: 210000, minP: 12, maxP: 60, unit: 'meses', stepTime: 1,
-                    req: ["Libre disponibilidad (viajes, salud, compras).", "A sola firma hasta Bs 210,000.", "Tasa fija durante el primer año.", "Aprobación ágil para Plan Sueldo."]
-                },
-                { 
-                    id: 'vehicular', prefix: 'Crédito', name: 'Vehicular', icon: 'fa-car', min: 35000, max: 350000, minP: 12, maxP: 60, unit: 'meses', stepTime: 1,
-                    req: ["Financia el 80% en vehículos nuevos.", "Garantía prendaria (el mismo vehículo).", "Tasa fija los primeros 12 meses.", "Seguro automotor incluido en cuota."]
-                },
-                { 
-                    id: 'vivienda', prefix: 'Crédito', name: 'Vivienda Tradicional', icon: 'fa-house', min: 140000, max: 3500000, minP: 12, maxP: 240, unit: 'meses', stepTime: 1,
-                    req: ["Plazo extendido hasta 20 años (240 meses).", "Financiamiento del 80% del valor comercial.", "Tasa mínima competitiva para montos altos.", "Seguro de desgravamen incluido."]
-                }
+                { id: 'consumo', prefix: 'Crédito', name: 'Consumo', icon: 'fa-cart-shopping', min: 14000, max: 210000, minP: 12, maxP: 60, unit: 'meses', stepTime: 1, req: ["Libre disponibilidad (viajes, salud, compras).", "A sola firma hasta Bs 210,000.", "Tasa fija durante el primer año.", "Aprobación ágil para Plan Sueldo."] },
+                { id: 'vehicular', prefix: 'Crédito', name: 'Vehicular', icon: 'fa-car', min: 35000, max: 350000, minP: 12, maxP: 60, unit: 'meses', stepTime: 1, req: ["Financia el 80% en vehículos nuevos.", "Garantía prendaria (el mismo vehículo).", "Tasa fija los primeros 12 meses.", "Seguro automotor incluido en cuota."] },
+                { id: 'vivienda', prefix: 'Crédito', name: 'Vivienda Tradicional', icon: 'fa-house', min: 140000, max: 3500000, minP: 12, maxP: 240, unit: 'meses', stepTime: 1, req: ["Plazo extendido hasta 20 años (240 meses).", "Financiamiento del 80% del valor comercial.", "Tasa mínima competitiva para montos altos.", "Seguro de desgravamen incluido."] }
             ]
         };
 
-        let activeMode = 'DPF', activeProduct = CONFIG.DPF[0];
+        let activeMode = 'DPF', activeProduct = CONFIG.DPF[0], lastResult = 0;
         const formatter = new Intl.NumberFormat('es-BO', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
         function showMessage(text) {
@@ -392,34 +370,36 @@
             setTimeout(() => { el.style.display = 'none'; }, 4000);
         }
 
-        // Lógica de formateo manual del monto con puntos
         function formatMontoInput(input) {
             let value = input.value.replace(/\D/g, ""); 
+            let start = input.selectionStart;
+            let oldLen = input.value.length;
+
             if (value !== "") {
                 let numericValue = parseInt(value, 10);
                 if (numericValue > activeProduct.max) numericValue = activeProduct.max;
                 input.value = formatter.format(numericValue);
+                
+                let newLen = input.value.length;
+                input.setSelectionRange(start + (newLen - oldLen), start + (newLen - oldLen));
             } else {
                 input.value = "";
             }
             updateCalculations();
         }
 
-        // Función para subir/bajar de 1000 en 1000
         function stepMonto(delta) {
             let current = getMontoNumeric();
             let next = current + delta;
-            
-            // Validar límites
             if (next < activeProduct.min) next = activeProduct.min;
             if (next > activeProduct.max) next = activeProduct.max;
-            
             document.getElementById('input-monto').value = formatter.format(next);
             updateCalculations();
         }
 
         function getMontoNumeric() {
-            const val = document.getElementById('input-monto').value.replace(/\D/g, "");
+            const input = document.getElementById('input-monto');
+            const val = input.value.replace(/\D/g, "");
             return val === "" ? activeProduct.min : parseInt(val, 10);
         }
 
@@ -453,20 +433,22 @@
             const inputMonto = document.getElementById('input-monto');
             const sp = document.getElementById('slider-plazo');
             
-            inputMonto.value = formatter.format(prod.min);
+            let currentMonto = getMontoNumeric();
+            if(currentMonto < prod.min) currentMonto = prod.min;
+            if(currentMonto > prod.max) currentMonto = prod.max;
+            inputMonto.value = formatter.format(currentMonto);
+            inputMonto.placeholder = `Mín: ${formatter.format(prod.min)}`;
+
             sp.min = prod.minP; sp.max = prod.maxP; sp.value = prod.minP; sp.step = prod.stepTime;
-            
             document.getElementById('min-monto-label').innerText = formatter.format(prod.min) + " Bs";
             document.getElementById('max-monto-label').innerText = formatter.format(prod.max) + " Bs";
             document.getElementById('min-plazo-label').innerText = prod.minP;
             document.getElementById('max-plazo-label').innerText = prod.maxP;
             document.getElementById('unit-label').innerText = prod.unit;
-            
             renderActionBlocks(prod);
             updateCalculations();
         }
 
-        // Renderizar bloques de acción en ambos contenedores (uno se oculta por CSS)
         function renderActionBlocks(prod) {
             const content = `
                 <div class="space-y-4">
@@ -481,7 +463,7 @@
                     <h4 class="text-[8px] font-black text-brand-navy uppercase tracking-widest mb-2 border-b border-slate-100 pb-1">Condiciones del Plan</h4>
                     <ul class="space-y-1.5">
                         ${prod.req.map(item => `
-                            <li class="text-[10px] text-slate-900 leading-tight font-medium flex items-start gap-2">
+                            <li class="text-[10px] text-slate-900 leading-tight font-medium flex items-start gap-2 animate-text-reveal">
                                 <i class="fa-solid fa-circle-check text-brand-orange mt-0.5 text-[8px]"></i> <span>${item}</span>
                             </li>
                         `).join('')}
@@ -529,41 +511,72 @@
             return Math.round(res);
         }
 
+        function animateValue(obj, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = formatter.format(Math.floor(progress * (end - start) + start));
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
         function updateCalculations() {
             const m = getMontoNumeric();
             const p = parseFloat(document.getElementById('slider-plazo').value);
             const t = getTasa(m, p);
             
+            // Mejora: Validación de rango visual
+            const minLabel = document.getElementById('min-monto-label');
+            if (m < activeProduct.min) {
+                minLabel.classList.remove('text-slate-300');
+                minLabel.classList.add('text-brand-orange');
+            } else {
+                minLabel.classList.remove('text-brand-orange');
+                minLabel.classList.add('text-slate-300');
+            }
+
             document.getElementById('display-plazo').innerText = p;
             document.getElementById('rate-badge').innerText = `${(t*100).toFixed(2)}%`;
             
             const res = calculateResults(m, p, t);
-            document.getElementById('main-result-value').innerText = formatter.format(res);
-            const infoBox = document.getElementById('secondary-result');
+            const resElement = document.getElementById('main-result-value');
             
+            if(res !== lastResult) {
+                animateValue(resElement, lastResult, res, 400);
+                lastResult = res;
+            } else {
+                resElement.innerText = formatter.format(res);
+            }
+
+            const infoBox = document.getElementById('secondary-result');
             if (activeMode !== 'CREDITO') {
                 document.getElementById('main-result-label').innerText = "GANANCIA ESTIMADA";
                 infoBox.innerHTML = `
                     <div class="flex flex-col hover-grow cursor-default">
-                        <span class="text-white/40 text-[8px] md:text-[9px] font-black uppercase tracking-widest mb-1.5">Total a Recibir</span>
+                        <span class="text-white/40 text-[8px] md:text-[9px] font-black uppercase tracking-widest mb-1.5">Monto Final (Capital + Interés)</span>
                         <span class="text-white font-bold text-2xl md:text-4xl tracking-tighter transition-all duration-500">${formatter.format(m + res)} Bs</span>
                     </div>
                     <div class="flex flex-col border-l border-white/10 pl-6 hover-grow cursor-default">
-                        <span class="text-white/40 text-[8px] md:text-[9px] font-black uppercase tracking-widest mb-1.5">Estado</span>
-                        <span class="text-brand-orange font-bold text-lg md:text-xl uppercase italic">Garantizado</span>
+                        <span class="text-white/40 text-[8px] md:text-[9px] font-black uppercase tracking-widest mb-1.5">Rentabilidad</span>
+                        <span class="text-brand-orange font-bold text-lg md:text-xl uppercase italic">Garantizada</span>
                     </div>`;
             } else {
                 document.getElementById('main-result-label').innerText = "CUOTA MENSUAL ESTIMADA";
                 infoBox.innerHTML = `
                     <div class="flex flex-col hover-grow cursor-default">
-                        <span class="text-brand-orange text-[8px] md:text-[9px] font-black uppercase tracking-widest mb-1.5">Ahorro Diario</span>
+                        <!-- MEJORA: Etiqueta más comprensible -->
+                        <span class="text-brand-orange text-[8px] md:text-[9px] font-black uppercase tracking-widest mb-1.5 leading-tight">Ahorro diario para cubrir cuota</span>
                         <div class="flex items-baseline gap-1">
                              <span class="text-white font-black text-3xl md:text-4xl tracking-tighter transition-all duration-500">${Math.round(res/30)} Bs</span>
                              <span class="text-[7px] text-white/40 uppercase font-black">/ día</span>
                         </div>
                     </div>
                     <div class="flex flex-col border-l border-white/10 pl-6 hover-grow cursor-default">
-                        <span class="text-white/40 text-[8px] md:text-[9px] font-black uppercase tracking-widest mb-1.5">Sueldo Mínimo</span>
+                        <span class="text-white/40 text-[8px] md:text-[9px] font-black uppercase tracking-widest mb-1.5">Ingreso sugerido</span>
                         <span class="text-white font-bold text-xl md:text-2xl tracking-tighter">${formatter.format(Math.round(res / 0.3))} Bs</span>
                     </div>`;
             }
@@ -607,7 +620,7 @@
         function sendWhatsApp() {
             const monto = formatter.format(getMontoNumeric());
             const plazo = document.getElementById('display-plazo').innerText;
-            const res = document.getElementById('main-result-value').innerText;
+            const res = formatter.format(lastResult);
             const resLabel = document.getElementById('main-result-label').innerText;
             const tasa = document.getElementById('rate-badge').innerText;
             
